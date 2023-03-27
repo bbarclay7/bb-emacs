@@ -20,6 +20,16 @@
     ;;close a child frame
     (delete-frame (selected-frame))))
 
+;; Eshell itself can open a specific new buffer when invoked as (eshell
+;; 'N) where N is a positive integer.  When invoked as (eshell 'Z) where Z
+;;is not a positive integer, it will open the next sequential free shell
+;;number.  If you would like to provide a function to perform this, you may
+;; use something similar to the following: 
+(defun eshell-new()
+  "Open a new instance of eshell."
+    (interactive)
+      (eshell 'N))
+
 
 (defvar my-latest-killed-buffer)
 
