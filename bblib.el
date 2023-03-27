@@ -20,6 +20,29 @@
     ;;close a child frame
     (delete-frame (selected-frame))))
 
+
+(defvar my-latest-killed-buffer)
+
+(defun my-kill-buffer()
+  "
+Kill current buffer without confirmation.
+To undo latest kill call 'my-unkill-buffer'
+"
+  (interactive)
+  (setq my-latest-killed-buffer (buffer-file-name) )
+  (kill-buffer (buffer-name)))
+
+
+(defun my-unkill-buffer()
+  "
+Undo the latest buffer kill
+"
+  (interactive)
+  (find-file my-latest-killed-buffer ))
+
+
+
+
 ;;a no-op function to bind to if you want to set a keystroke to null
 (defun void ()
   "this is a no-op"

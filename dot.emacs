@@ -103,7 +103,7 @@
  ;; If there is more than one, they won't work right.
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
  '(package-selected-packages
-   '(company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '(editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
@@ -157,6 +157,16 @@
  '(rainbow-delimiters-depth-7-face ((t (:foreground "tan"))))
  '(rainbow-delimiters-depth-8-face ((t (:foreground "cornsilk"))))
  '(rainbow-delimiters-depth-9-face ((t (:foreground "medium sea green")))))
+
+
+;;;; copilot
+
+(use-package copilot
+  :load-path (lambda () (expand-file-name "copilot.el" user-emacs-directory))
+  ;; don't show in mode line
+  :diminish)
+
+(load "bb-copilot.el")
 
 
 ;;;; tabbar
