@@ -1,6 +1,7 @@
 ;;https://robert.kra.hn/posts/2023-02-22-copilot-emacs-setup/
 
 
+
 ;;Restricting when to show completions
 
 ;;global-copilot-mode will sometimes be a bit too eager, so we disable in some modes comple
@@ -8,6 +9,9 @@
 (defun rk/no-copilot-mode ()
   "Helper for `rk/no-copilot-modes'."
   (copilot-mode -1))
+
+(debugger-mode-hook #'rk/no-copilot-mode)
+
 
 (defvar rk/no-copilot-modes '(shell-mode
                               inferior-python-mode
@@ -55,3 +59,34 @@
       (global-copilot-mode))))
 
 (define-key global-map (kbd "M-C-<escape>") #'rk/copilot-change-activation)
+
+(defun rk/copilot-complete-or-accept ()
+  "Command that either triggers a completion or accepts one if one
+is available. Useful if you tend to hammer your keys like I do."
+  (interactive)
+  (if (copilot--overlay-visible)
+      (progn
+        (copilot-accept-completion)
+        (open-line 1)
+        (next-line))
+    (copilot-complete)))
+
+(define-key copilot-mode-map (kbd "M-C-<next>") #'copilot-next-completion)
+(define-key copilot-mode-map (kbd "M-C-<prior>") #'copilot-previous-completion)
+(define-key copilot-mode-map (kbd "M-C-<right>") #'copilot-accept-completion-by-word)
+(define-key copilot-mode-map (kbd "M-C-<down>") #'copilot-accept-completion-by-line)
+(define-key global-map (kbd "M-C-<return>") #'rk/copilot-complete-or-accept)
+
+;; If you also want to use the <tab> key for completion but still keep the normal functionality on it, do:
+(defun rk/copilot-tab ()
+  "Tab command that will complet with copilot if a completion is
+available. Otherwise will try company, yasnippet or normal
+tab-indent."
+  (interactive)
+  (or (copilot-accept-completion)
+      ;(company-yasnippet-or-completion)
+      (indent-for-tab-command)))
+
+(define-key global-map (kbd "<tab>") #'rk/copilot-tab)
+
+

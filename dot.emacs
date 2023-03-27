@@ -169,6 +169,9 @@
 (load "bb-copilot.el")
 
 
+
+
+
 ;;;; tabbar
 (use-package tabbar
   :ensure t
@@ -183,15 +186,23 @@
 ;;;; autocomplete
 (use-package company
   :ensure t)
-(add-hook 'after-init-hook 'global-company-mode)
+
+;; (add-hook 'company-mode-hook
+;; 	  '(lambda ()
+;;              (add-to-list 'company-backends 'company-dabbrev-code)
+;;              ))
 
 
-;; (use-package auto-complete
-;;   :ensure t
-;; )
-;; (add-to-list 'ac-dictionary-directories (concat bb-emacslib-root "/ac-dict"))
-;; (require 'auto-complete-config)
-;; (ac-config-default)
+
+;; (add-hook 'after-init-hook 'global-company-mode)
+
+
+(use-package auto-complete
+  :ensure t
+)
+(add-to-list 'ac-dictionary-directories (concat bb-emacslib-root "/ac-dict"))
+(require 'auto-complete-config)
+(ac-config-default)
 
 
 
@@ -215,6 +226,17 @@
 
 (global-set-key "\C-x55" 'split-window-fork)
 (global-set-key "\C-x\C-c" 'intelligent-close) 
+
+;; Tell emacs to save backups in the global backups directory...
+(setq
+ backup-by-copying t      ; No usar links simbolicos
+ backup-directory-alist
+ '(("." . "~/.saves"))   ; Guardamos en .saves/
+ delete-old-versions t
+ kept-new-versions 6
+ kept-old-versions 2
+ version-control t)       ; Y les ponemos numeritos a todos los cambios (como lo hace el CVS)
+
 
 ;; Everything in UTF-8
 (prefer-coding-system 'utf-8)
