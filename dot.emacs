@@ -6,13 +6,11 @@
 
 ;; set emacs lisp path
 
-(defvar bb-emacslib-root
-  (if (getenv "BB_EMACS")
-      (getenv "BB_EMACS")
-    "~/bb-emacs"))
-
+(defvar bb-emacslib-root (file-name-directory (file-truename user-init-file)))
+  
 (setq load-path
-      (cons (expand-file-name bb-emacslib-root) load-path))
+      (cons (concat bb-emacslib-root "/lisp") load-path))
+
 (setq user-emacs-directory bb-emacslib-root)
 
 (load "bblib.el")
@@ -160,13 +158,13 @@
 
 
 ;;;; copilot
-
-(use-package copilot
-  :load-path (lambda () (expand-file-name "copilot.el" user-emacs-directory))
-  ;; don't show in mode line
-  :diminish)
-
-(load "bb-copilot.el")
+(when (not (getenv "EC_SITE"))
+  (use-package copilot
+    :load-path (lambda () (expand-file-name "copilot.el" user-emacs-directory))
+    ;; don't show in mode line
+    :diminish)
+  
+  (load "bb-copilot.el"))
 
 
 
