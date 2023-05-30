@@ -320,3 +320,16 @@
 (global-set-key "\M-d" 'insert-date)
 
 (global-set-key (kbd "M-s C-s") 'isearch-forward-symbol-at-point)
+
+
+					;(defun bb-tabbar-bindings ()
+(setq org-support-shift-select 'always)
+  (global-set-key [S-left] 'tabbar-backward)
+  (global-set-key [S-right] 'tabbar-forward)
+  (global-set-key [S-up] 'tabbar-backward-group)
+  (global-set-key [S-down] 'tabbar-forward-group)
+  ;;(global-set-key [backtab] 'tabbar-mode)
+;  )
+;;
+
+(fido-mode)

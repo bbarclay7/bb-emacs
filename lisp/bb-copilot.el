@@ -10,7 +10,7 @@
   "Helper for `rk/no-copilot-modes'."
   (copilot-mode -1))
 
-(debugger-mode-hook #'rk/no-copilot-mode)
+;;(debugger-mode-hook #'rk/no-copilot-mode)
 
 
 (defvar rk/no-copilot-modes '(shell-mode
