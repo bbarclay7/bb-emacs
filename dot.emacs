@@ -249,6 +249,10 @@
 (set-selection-coding-system            'utf-8)
 (setq default-process-coding-system '(utf-8 . utf-8))
 
+
+;; don't override shift-arrow; let tabbar have it
+(setq org-replace-disputed-keys t)
+
 ;; don't prompt for following symlinks into git workspaces
 (setq vc-follow-symlinks t)
 
