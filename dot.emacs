@@ -101,16 +101,47 @@
  ;; If there is more than one, they won't work right.
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
  '(package-selected-packages
-   '(editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '(highlight-indentation flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
-
+;; flycheck mode -- https://www.flycheck.org/en/latest/user/installation.html#package-installation
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
 
 (use-package auto-compile
   :ensure t)
 (auto-compile-on-load-mode)
 (auto-compile-on-save-mode)
+
+
+;; https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159
+(defun aj-toggle-fold ()
+  "Toggle fold all lines larger than indentation on current line"
+  (interactive)
+  (let ((col 1))
+    (save-excursion
+      (back-to-indentation)
+      (setq col (+ 1 (current-column)))
+      (set-selective-display
+       (if selective-display nil (or col 1))))))
+(global-set-key [(M C i)] 'aj-toggle-fold)
+(require 'highlight-indentation)
+(add-hook 'python-mode-hook 'highlight-indentation-mode)
+(add-hook 'js2-mode-hook 'highlight-indentation-mode)
+(let ((font "Arial")
+      (background "#CCC")
+      (height 44))
+   ;(elpy-enable)
+   (set-face-background 'highlight-indentation-face background)
+   (set-face-attribute 'highlight-indentation-face nil :height height)
+   ;(set-face-attribute 'linum nil :height 1)
+   ;(set-face-attribute 'linum nil :font font)
+   )
+
+
+
 
 (use-package rainbow-delimiters
   :ensure t
