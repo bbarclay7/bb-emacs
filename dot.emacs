@@ -267,6 +267,9 @@
  version-control t)       ; Y les ponemos numeritos a todos los cambios (como lo hace el CVS)
 
 
+;; show full path to file being edited in frame -- https://emacs.stackexchange.com/questions/33388/show-the-full-path-to-the-file
+(setq-default frame-title-format "%b (%f)")
+
 ;; Everything in UTF-8
 (prefer-coding-system 'utf-8)
 (set-language-environment 'UTF-8)
