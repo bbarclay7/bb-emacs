@@ -101,7 +101,7 @@
  ;; If there is more than one, they won't work right.
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
  '(package-selected-packages
-   '(highlight-indentation flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '( flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
@@ -127,18 +127,19 @@
       (set-selective-display
        (if selective-display nil (or col 1))))))
 (global-set-key [(M C i)] 'aj-toggle-fold)
-(require 'highlight-indentation)
-(add-hook 'python-mode-hook 'highlight-indentation-mode)
-(add-hook 'js2-mode-hook 'highlight-indentation-mode)
-(let ((font "Arial")
-      (background "#CCC")
-      (height 44))
-   ;(elpy-enable)
-   (set-face-background 'highlight-indentation-face background)
-   (set-face-attribute 'highlight-indentation-face nil :height height)
-   ;(set-face-attribute 'linum nil :height 1)
-   ;(set-face-attribute 'linum nil :font font)
-   )
+;(require 'highlight-indentation)
+;(add-hook 'python-mode-hook 'highlight-indentation-mode)
+;(add-hook 'js2-mode-hook 'highlight-indentation-mode)
+
+;; (let ((font "Arial")
+;;       (background "#CCC")
+;;       (height 44))
+;;    ;(elpy-enable)
+;;    (set-face-background 'highlight-indentation-face background)
+;;    (set-face-attribute 'highlight-indentation-face nil :height height)
+;;    ;(set-face-attribute 'linum nil :height 1)
+;;    ;(set-face-attribute 'linum nil :font font)
+;;    )
 
 
 
