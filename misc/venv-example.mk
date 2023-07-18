@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-python_exe := /usr/intel/pkgs/python3/3.11.1/bin/python3
+python_exe := /usr/bin/python3
 localdir=local
 pips := pyyaml mako
 
@@ -16,11 +16,6 @@ ifneq (,$(VIRTUAL_ENV))
 $(error VIRTUAL_ENV env var is set; this Makefile requires no pre-existing venv setup)
 endif
 with_venv := source local/venv/bin/activate &&
-
-ifneq ($(EC_SITE),)
-proxy_url := http://proxy-chain.intel.com:912
-pipargs += --proxy=$(proxy_url)
-endif
 
 #MENU menu: show this menu
 menu:
