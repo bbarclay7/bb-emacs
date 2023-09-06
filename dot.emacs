@@ -1,5 +1,7 @@
 ;; -*- coding: utf-8; mode: emacs-lisp -*-
 
+
+
 ;; enable file-local variables like coding and mode above
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html
 (setq enable-local-variables t)
@@ -372,3 +374,7 @@
 ;;
 
 (fido-mode)
+
+
+;; auto chmod +x files with shebang line
+(require 'shebang)
