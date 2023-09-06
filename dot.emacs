@@ -378,3 +378,6 @@
 
 ;; auto chmod +x files with shebang line
 (require 'shebang)
+
+;; show col num
+(setq column-number-mode t)
