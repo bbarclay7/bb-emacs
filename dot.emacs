@@ -381,3 +381,6 @@
 
 ;; show col num
 (setq column-number-mode t)
+
+;; load facts from John McCarthy -- https://news.ycombinator.com/item?id=37420812
+(load "facts.el")
