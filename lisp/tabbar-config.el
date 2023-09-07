@@ -21,6 +21,9 @@
                                       "*Ediff Registry*"))
               "#misc")
 
+             ((string-match-p "*Flycheck error messages*" (buffer-name))
+	      "#flycheck")
+	     
              ((or
                (string-match "/bb-emacs/" dir)
                (string-match "\\.emacs" (buffer-name) ))
@@ -30,7 +33,7 @@
               "$HOME")
 
             
-            
+
             ((string-match-p "isoenv-core" dir)
              "#isoenv-core")
        
