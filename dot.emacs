@@ -1,7 +1,13 @@
 ;; -*- coding: utf-8; mode: emacs-lisp -*-
+;;; package --- Summary
+
+;;; .emacs
 
 
+;;; Commentary:
+;;This file configures Emacs runtime for Brandon Barclay.
 
+;;; Code:
 ;; enable file-local variables like coding and mode above
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Specifying-File-Variables.html
 (setq enable-local-variables t)
@@ -67,7 +73,7 @@
 ;; set set ALT-= to hide/show all blocks
 (defvar hs-toggle-hideall-state nil)
 (defun hs-toggle-hideall ()
-  "Toggle collapse / expand all blocks"
+"Toggle collapse / expand all blocks."
   (interactive)
   (unless (bound-and-true-p hs-minor-mode)
     (hs-minor-mode))
@@ -103,7 +109,7 @@
  ;; If there is more than one, they won't work right.
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
  '(package-selected-packages
-   '( yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '(gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
@@ -120,7 +126,7 @@
 
 ;; https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159
 (defun aj-toggle-fold ()
-  "Toggle fold all lines larger than indentation on current line"
+"Toggle fold all lines larger than indentation on current line."
   (interactive)
   (let ((col 1))
     (save-excursion
@@ -247,8 +253,8 @@
 
 ;; http://edivad.wordpress.com/2007/05/31/emacs-reload-a-file/
 (defun my-revert-buffer ()
-  "revert buffer without asking for confirmation"
-  (interactive) 
+"Revert buffer without asking for confirmation."
+  (interactive)
   (revert-buffer t t)
   )
 (global-set-key [f5] 'my-revert-buffer)
@@ -257,7 +263,7 @@
 ;;;; misc. behaviors
 
 (global-set-key "\C-x55" 'split-window-fork)
-(global-set-key "\C-x\C-c" 'intelligent-close) 
+(global-set-key "\C-x\C-c" 'intelligent-close)
 
 ;; Tell emacs to save backups in the global backups directory...
 (setq
@@ -311,10 +317,11 @@
 
 ;; show paren, brace, and curly brace "partners" at all times
 (show-paren-mode t)
-;; jump to matching paren when you press '%' key 
+;; jump to matching paren when you press '%' key
 (global-set-key "%" 'match-paren)
+
 (defun match-paren (arg)
-  "Go to the matching paren if on a paren; otherwise insert %."
+"Go to the matching paren of ARG if on a paren; otherwise insert %."
   (interactive "p")
   (cond ((looking-at "\\s\(") (forward-list 1) (backward-char 1))
         ((looking-at "\\s\)") (forward-char 1) (backward-list 1))
@@ -373,7 +380,7 @@
 ;  )
 ;;
 
-(fido-mode)
+(fido-mode) ; esc-tab completes in minibuffer without exiting minibuffer
 
 
 ;; auto chmod +x files with shebang line
@@ -384,3 +391,6 @@
 
 ;; load facts from John McCarthy -- https://news.ycombinator.com/item?id=37420812
 (load "facts.el")
+
+(provide 'dot)
+;;; dot.emacs ends here
