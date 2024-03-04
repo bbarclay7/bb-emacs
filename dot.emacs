@@ -1,4 +1,4 @@
-;; -*- coding: utf-8; mode: emacs-lisp -*-
+;; -*- Coding: utf-8; mode: emacs-lisp -*-
 ;;; package --- Summary
 
 ;;; .emacs
@@ -38,6 +38,11 @@
 (setq package-user-dir (concat bb-emacslib-root "/melpa-packages"))
 
 (require 'package)
+
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
+
 
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
@@ -109,7 +114,7 @@
  ;; If there is more than one, they won't work right.
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
  '(package-selected-packages
-   '(gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '(markdown-preview-mode gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
@@ -391,6 +396,11 @@
 
 ;; load facts from John McCarthy -- https://news.ycombinator.com/item?id=37420812
 (load "facts.el")
+
+
+;; gptel
+(global-set-key [f7] 'gptel-send)
+
 
 (provide 'dot)
 ;;; dot.emacs ends here
