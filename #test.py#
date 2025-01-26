@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+
+
+# execute command like perl does with qx ; returning stdout as a string
+def qx(cmd):
+    

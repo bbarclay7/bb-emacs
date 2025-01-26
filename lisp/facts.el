@@ -15,10 +15,10 @@
 ;;; Lisp.  I attached a couple F keys to evaluating and printing
 ;;; Lisp expressions.
 
-
+;;; Code:
 (defun facts (&optional units)
   "Miscellaneous numerical facts for use in elisp programs.
-Units default to mks unless other units, cgs, english or DU
+UNITS default to mks unless other units, cgs, english or DU
 are given as an argument."
   (interactive)
   (setq units1 (or units 'mks))

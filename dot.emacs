@@ -113,8 +113,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
+ '(org-agenda-files '("/Users/bb/agenda/premiers.org"))
  '(package-selected-packages
-   '(markdown-preview-mode gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '(winum p4 openwith org-download org-modern markdown-preview-mode gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
@@ -301,12 +302,15 @@
 ;; don't override shift-arrow; let tabbar have it
 (setq org-replace-disputed-keys t)
 
+
 ;; don't prompt for following symlinks into git workspaces
 (setq vc-follow-symlinks t)
 
 (setq inhibit-startup-screen t)
 
 (tool-bar-mode -1)
+
+
 
 ;; https://www.emacswiki.org/emacs/CopyAndPaste
 (setq x-select-enable-primary t)
@@ -375,14 +379,14 @@
 (global-set-key (kbd "M-s C-s") 'isearch-forward-symbol-at-point)
 
 
-					;(defun bb-tabbar-bindings ()
+;;(defun bb-tabbar-bindings ()
 (setq org-support-shift-select 'always)
-  (global-set-key [S-left] 'tabbar-backward)
-  (global-set-key [S-right] 'tabbar-forward)
-  (global-set-key [S-up] 'tabbar-backward-group)
-  (global-set-key [S-down] 'tabbar-forward-group)
-  ;;(global-set-key [backtab] 'tabbar-mode)
-;  )
+(global-set-key [S-left] 'tabbar-backward)
+(global-set-key [S-right] 'tabbar-forward)
+(global-set-key [S-up] 'tabbar-backward-group)
+(global-set-key [S-down] 'tabbar-forward-group)
+;;(global-set-key [backtab] 'tabbar-mode)
+					;  )
 ;;
 
 (fido-mode) ; esc-tab completes in minibuffer without exiting minibuffer
@@ -400,6 +404,32 @@
 
 ;; gptel
 (global-set-key [f7] 'gptel-send)
+
+;; Llama.cpp offers an OpenAI compatible API
+(gptel-make-openai "llama-cpp"          ;Any name
+  :stream t                             ;Stream responses
+  :protocol "http"
+  :host "100.72.223.11:8080"                ; alvarez on tailscale
+  :models '("alvarez-llamafile"))                    ;Any names, doesn't matter for Llama
+(gptel-make-openai "llama-cpp2"          ;Any name
+  :stream t                             ;Stream responses
+  :protocol "http"
+  :host "127.0.0.1:8080"                ; localhost
+  :models '("localhost-llamafile"))              ;Any names, doesn't matter
+
+
+
+;; setup org agenda
+
+(setq org-agenda-deadline-leaders '("In %3d d.: "))
+
+;https://orgmode.org/manual/Activation.html
+(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c c") #'org-capture)
+
+;https://orgmode.org/manual/Weekly_002fdaily-agenda.html
+(setq org-agenda-include-diary t)
 
 
 (provide 'dot)
