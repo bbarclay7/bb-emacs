@@ -95,6 +95,10 @@ On other systems, multiplies by character width."
                window-width indent usable-chars final-width)
       final-width))
 
+  ;; CRITICAL: Make Org-mode respect #+ATTR_ORG :width attribute
+  ;; Default behavior often ignores width on Retina displays
+  (setq org-image-actual-width nil)  ; nil = always use #+ATTR width
+
   ;; Use annotate function to add width attribute dynamically
   (setq org-download-annotate-function
         (lambda (_link)
