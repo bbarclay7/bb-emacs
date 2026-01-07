@@ -129,6 +129,18 @@ This Emacs setup is designed around several core principles:
 | ~C-c c~   | Org capture     |
 | ~C-c l~   | Store org link  |
 
+*** Org-mode Images (in org files)
+
+| Key         | Function                                  |
+|-------------+-------------------------------------------|
+| ~C-c p~     | Paste screenshot from clipboard           |
+| ~C-c s~     | Take new screenshot and insert            |
+| ~C-c i w~   | Resize image at point (prompts for width) |
+| ~C-c C-c~   | Execute code block at point               |
+
+*Images saved to:* ~./images/~ subdirectory (auto-created)
+*Default width:* 600 pixels (customize with ~C-c i w~)
+
 *** AI Workflow - ~C-c a~ prefix
 
 | Key       | Function                                  |

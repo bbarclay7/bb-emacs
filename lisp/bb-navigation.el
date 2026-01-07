@@ -61,5 +61,45 @@
 ;; (Security: only enable this for trusted org files)
 (setq org-confirm-babel-evaluate nil)
 
+;;;; Org-download - paste screenshots and images into org files
+(use-package org-download
+  :ensure t
+  :after org
+  :config
+  ;; Save images in ./images/ subdirectory relative to org file
+  (setq org-download-method 'directory
+        org-download-image-dir "./images"
+        org-download-heading-lvl nil  ; Don't organize by heading
+        org-download-timestamp "%Y%m%d-%H%M%S_"  ; Timestamp format
+        org-download-screenshot-method "screencapture -i %s"  ; macOS screenshot
+        org-download-image-attr-list '("#+ATTR_ORG: :width 600"))  ; Default width
+
+  ;; Keybindings for org-mode
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c p") 'org-download-clipboard)
+    (define-key org-mode-map (kbd "C-c s") 'org-download-screenshot)))
+
+;; Helper function to resize image at point
+(defun bb-org/resize-image-at-point (width)
+  "Resize the image at point to WIDTH pixels.
+If called interactively, prompt for width."
+  (interactive "nImage width (pixels): ")
+  (save-excursion
+    (let ((context (org-element-context)))
+      (when (eq (org-element-type context) 'link)
+        (goto-char (org-element-property :begin context))
+        ;; Remove existing ATTR_ORG if present
+        (when (save-excursion
+                (forward-line -1)
+                (looking-at "^[ \t]*#\\+ATTR_ORG:"))
+          (forward-line -1)
+          (kill-line 1))
+        ;; Insert new ATTR_ORG
+        (beginning-of-line)
+        (insert (format "#+ATTR_ORG: :width %d\n" width))
+        (message "Image resized to %d pixels" width)))))
+
+(global-set-key (kbd "C-c i w") 'bb-org/resize-image-at-point)
+
 (provide 'bb-navigation)
 ;;; bb-navigation.el ends here
