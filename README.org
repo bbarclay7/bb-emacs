@@ -133,8 +133,8 @@ This Emacs setup is designed around several core principles:
 
 | Key         | Function                                  |
 |-------------+-------------------------------------------|
-| ~C-c p~     | Paste screenshot from clipboard           |
-| ~C-c s~     | Take new screenshot and insert            |
+| ~C-c i p~   | Paste screenshot from clipboard           |
+| ~C-c i s~   | Take new screenshot and insert            |
 | ~C-c i w~   | Resize image at point (prompts for width) |
 | ~C-c C-c~   | Execute code block at point               |
 
