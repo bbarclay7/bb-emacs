@@ -88,10 +88,13 @@ Returns width in pixels, capping at buffer width minus indentation."
            (max-width (* usable-chars char-width)))  ; Convert to pixels
       (max 400 (min max-width 1200))))  ; Min 400px, max 1200px
 
-  ;; Set image attributes dynamically
-  (setq org-download-image-attr-list
-        '(lambda ()
-           (format "#+ATTR_ORG: :width %d" (bb-org/smart-image-width))))
+  ;; Use annotate function to add width attribute dynamically
+  (setq org-download-annotate-function
+        (lambda (_link)
+          (format "#+ATTR_ORG: :width %d" (bb-org/smart-image-width))))
+
+  ;; Clear the old image-attr-list to avoid conflicts
+  (setq org-download-image-attr-list nil)
 
   ;; Keybindings for org-mode - use C-c i prefix (i for image)
   ;; Use org-mode-hook to ensure keybindings work in all org buffers
