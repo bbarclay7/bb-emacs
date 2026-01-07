@@ -38,6 +38,10 @@
 (setq org-agenda-deadline-leaders '("In %3d d.: "))
 (setq org-agenda-include-diary t)
 
+;; CRITICAL: Make Org-mode respect #+ATTR_ORG :width for inline images
+;; nil = always use #+ATTR width, don't use actual image dimensions
+(setq org-image-actual-width nil)
+
 ;; Org-mode keybindings
 ;; Note: C-c a is reserved as prefix for AI commands
 (global-set-key (kbd "C-c l") #'org-store-link)
@@ -91,10 +95,6 @@ Multiplies usable character width by pixels-per-char for proper sizing."
                window-width indent usable-chars pixels-per-char final-width)
       final-width))
 
-  ;; CRITICAL: Make Org-mode respect #+ATTR_ORG :width attribute
-  ;; Default behavior often ignores width on Retina displays
-  (setq org-image-actual-width nil)  ; nil = always use #+ATTR width
-
   ;; Use annotate function to add width attribute dynamically
   (setq org-download-annotate-function
         (lambda (_link)
@@ -102,6 +102,15 @@ Multiplies usable character width by pixels-per-char for proper sizing."
 
   ;; Clear the old image-attr-list to avoid conflicts
   (setq org-download-image-attr-list nil)
+
+  ;; Auto-refresh inline images after pasting to apply width attribute
+  (defun bb-org/refresh-images-after-paste (&rest _args)
+    "Refresh inline images in org buffer after pasting."
+    (when (derived-mode-p 'org-mode)
+      (org-display-inline-images)))
+
+  (advice-add 'org-download-clipboard :after #'bb-org/refresh-images-after-paste)
+  (advice-add 'org-download-screenshot :after #'bb-org/refresh-images-after-paste)
 
   ;; Keybindings for org-mode - use C-c i prefix (i for image)
   ;; Use org-mode-hook to ensure keybindings work in all org buffers
