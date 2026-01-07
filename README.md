@@ -136,16 +136,99 @@ This Emacs setup is designed around several core principles:
 | `C-c c` | Org capture |
 | `C-c l` | Store org link |
 
+#### AI Workflow (Claude Code Integration) - `C-c a` prefix
+| Key | Function |
+|-----|----------|
+| `F7` | Send prompt to LLM with automatic context |
+| `C-c a e` | Explain code (current region or function) |
+| `C-c a t` | Generate tests for code |
+| `C-c a r` | Refactor code with instructions |
+| `C-c a p` | Send custom prompt with context |
+
+## Claude Code Workflow Integration
+
+The `bb-ai.el` module provides hooks and utilities designed to work seamlessly with Claude Code development workflows.
+
+### Smart Context Gathering
+
+When using AI assistance functions, the system automatically gathers:
+- Current file path and major mode
+- Selected region or function at point
+- Project root and type (via projectile)
+- Cursor position
+
+### AI-Assisted Development Functions
+
+**Explain Code** (`C-c a e`)
+- Sends current region or function to LLM for explanation
+- Automatically includes file and mode context
+- Useful for understanding unfamiliar code
+
+**Generate Tests** (`C-c a t`)
+- Generates comprehensive tests for current function or selection
+- Understands project context and testing frameworks
+- Creates test structure matching your project conventions
+
+**Refactor Code** (`C-c a r`)
+- Prompts for refactoring instructions
+- Sends code with full context to LLM
+- Preserves functionality while improving code quality
+
+**Smart LLM Prompt** (`F7` or `C-c a p`)
+- Enhanced gptel integration with automatic context
+- Includes file, mode, project, and selection information
+- No need to manually paste code or explain context
+
+### Workflow Hooks
+
+The module provides hooks for custom integration:
+
+```elisp
+;; Pre-command hook (runs before AI operations)
+bb-ai/pre-command-hook
+
+;; Post-command hook (runs after AI operations)
+bb-ai/post-command-hook
+
+;; Example: Auto-save before AI operations
+(add-hook 'bb-ai/pre-command-hook 'bb-ai/auto-save-buffer-maybe)
+```
+
+### Programming Mode Integration
+
+AI assistance automatically activates in programming modes:
+- Copilot enabled (if available)
+- Context gathering ready
+- Smart completions active
+
+### Example Workflow
+
+1. Open a Python file in your project
+2. Select a function you want to test
+3. Press `C-c a t` (generate tests)
+4. LLM receives: file path, Python mode, project context, function code
+5. Returns comprehensive test suite
+6. Review and integrate tests
+
+This eliminates manual context switching and copy-pasting when working with AI assistants.
+
 ## Structure
 
 ```
 bb-emacs/
-├── dot.emacs              # Main configuration file
+├── dot.emacs              # Main configuration (loads modules)
+├── dot.emacs.backup       # Backup of previous monolithic config
 ├── early-init.el          # Startup optimization (GC tuning)
-├── lisp/                  # Custom Emacs Lisp libraries
-│   ├── bblib.el          # Core utility functions
+├── lisp/                  # Custom Emacs Lisp libraries (modular)
+│   ├── bblib.el          # Core utility functions (frame, buffer, compilation)
+│   ├── bb-core.el        # Core settings (theme, encoding, UI)
+│   ├── bb-keybindings.el # All keybindings and interactive functions
+│   ├── bb-coding.el      # Coding tools (flycheck, rainbow-delimiters, etc.)
+│   ├── bb-completion.el  # Completion framework (auto-complete)
+│   ├── bb-navigation.el  # Navigation (tabbar, projectile, winum, org)
+│   ├── bb-ai.el          # AI assistance (copilot, gptel, Claude Code hooks)
 │   ├── bb-copilot.el     # Copilot integration & modes
-│   ├── bb-gptel.el       # LLM configuration
+│   ├── bb-gptel.el       # LLM endpoint configuration
 │   ├── tabbar-config.el  # Custom buffer grouping
 │   ├── shebang.el        # Auto chmod for scripts
 │   └── facts.el          # John McCarthy's astronomical calculator
@@ -154,6 +237,23 @@ bb-emacs/
 ├── ac-dict/              # Auto-complete dictionaries
 └── fonts/                # Inconsolata font variants
 ```
+
+### Modular Architecture
+
+The configuration is now organized by function:
+
+- **bb-core.el** - Basic Emacs behavior, theme, encoding, UI settings
+- **bb-keybindings.el** - All global keybindings and custom interactive functions
+- **bb-coding.el** - Development tools (syntax checking, formatting, code folding)
+- **bb-completion.el** - Text completion framework
+- **bb-navigation.el** - Buffer/window/project navigation tools
+- **bb-ai.el** - AI-assisted development with Claude Code workflow hooks
+
+This makes it easy to:
+- Test individual components
+- Share specific configurations
+- Understand what each module provides
+- Selectively enable/disable features
 
 ## Installation
 
