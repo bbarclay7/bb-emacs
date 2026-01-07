@@ -32,24 +32,28 @@
 ;; Requires: brew install ollama (macOS) or curl -fsSL https://ollama.com/install.sh | sh (Linux)
 ;; Then: ollama pull <model-name>
 
-;;;; CRITICAL: Ollama Context Window Optimization
-;; Default context window is only 2048 tokens - TOO SMALL for coding!
-;; Recommended: 32768 tokens for coding tasks (256k-1M for Qwen3-Coder)
+;;;; ⚠️  CRITICAL SETUP REQUIRED: Ollama Context Window ⚠️
 ;;
-;; Method 1: Create Modelfile (RECOMMENDED for persistent config)
+;; DEFAULT CONTEXT IS ONLY 2048 TOKENS - WILL FAIL FOR CODING!
+;; You MUST configure extended context before using these models.
+;;
+;; RECOMMENDED: Set environment variable (easiest, works for all models)
+;;   Add to ~/.zshrc or ~/.bashrc:
+;;     export OLLAMA_CONTEXT_LENGTH=32768
+;;   Then restart terminal and Ollama:
+;;     killall ollama && ollama serve
+;;
+;; VERIFY context is set:
+;;   ollama show qwen3-coder --modelfile | grep num_ctx
+;;   Should show: num_ctx 32768 (or higher)
+;;
+;; Alternative: Create per-model configs (see AI.org for details)
 ;;   FROM qwen3-coder
 ;;   PARAMETER num_ctx 32768
 ;;   Then: ollama create qwen3-coder-32k -f Modelfile
 ;;
-;; Method 2: Environment variable (global setting)
-;;   export OLLAMA_CONTEXT_LENGTH=32768
-;;
-;; Method 3: API parameter (per request, handled automatically by gptel)
-;;   No action needed - gptel can pass context size
-;;
 ;; Memory cost: ~1GB VRAM per 4k context increase
-;; For 32k context: ~8GB VRAM (easily fits M4 Ultra 128GB RAM)
-;; For Qwen3-Coder 256k: ~64GB VRAM (still manageable on M4 Ultra)
+;; 32k context = ~8GB VRAM (easily fits M4 Ultra 128GB RAM)
 
 ;; Ollama backend with coding-focused models
 (gptel-make-ollama "Ollama-Coding"
