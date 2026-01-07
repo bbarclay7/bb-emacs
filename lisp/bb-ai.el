@@ -7,13 +7,17 @@
 
 ;;; Code:
 
-(require 'gptel nil t)
+;; Load our custom Ollama integration (more reliable than gptel)
+(load "bb-ollama.el")
 
-;;;; gptel - LLM integration
-(use-package gptel
-  :ensure t
-  :defer t
-  :config (load "bb-gptel.el"))
+;;;; gptel - LLM integration (optional fallback)
+;; gptel has buffer management issues with Ollama
+;; Using bb-ollama.el for primary integration
+;; (require 'gptel nil t)
+;; (use-package gptel
+;;   :ensure t
+;;   :defer t
+;;   :config (load "bb-gptel.el"))
 
 ;;;; Claude Code workflow hooks
 ;; These hooks integrate with Claude Code development workflows
@@ -48,25 +52,16 @@ Returns an alist with buffer information."
    (cons 'project (when (fboundp 'projectile-project-root)
                     (ignore-errors (projectile-project-root))))))
 
-;; Function to send context to gptel with smart defaults
+;; Function to send context to Ollama with smart defaults
 (defun bb-ai/send-to-llm-with-context (prompt)
-  "Send PROMPT to LLM with automatic context gathering."
+  "Send PROMPT to Ollama LLM with automatic context gathering."
   (interactive "sPrompt: ")
   (let* ((context (bb-ai/gather-context))
-         (file (cdr (assoc 'file context)))
-         (mode (cdr (assoc 'mode context)))
-         (region (cdr (assoc 'region context)))
-         (full-prompt (format "File: %s\nMode: %s\n\n%s%s"
-                              file
-                              mode
-                              (if region (format "Selected code:\n```\n%s\n```\n\n" region) "")
-                              prompt)))
-    (with-temp-buffer
-      (insert full-prompt)
-      (gptel-send))))
+         (region (cdr (assoc 'region context))))
+    (bb-ollama-query prompt region)))
 
-;; Enhanced F7 keybinding with context
-(global-set-key [f7] 'bb-ai/send-to-llm-with-context)
+;; F7 is already bound in bb-ollama.el to bb-ollama-query
+;; which is simpler and more direct
 
 ;; Hook for when entering programming modes
 (defun bb-ai/prog-mode-setup ()
@@ -122,9 +117,9 @@ Returns an alist with buffer information."
       (message "No code region or function found"))))
 
 ;; Keybindings for AI workflow
-(global-set-key (kbd "C-c a e") 'bb-ai/explain-code)
+;; Note: F7, C-c a e, C-c a r are already bound in bb-ollama.el
+;; Keeping these functions for advanced use cases
 (global-set-key (kbd "C-c a t") 'bb-ai/generate-tests)
-(global-set-key (kbd "C-c a r") 'bb-ai/refactor-code)
 (global-set-key (kbd "C-c a p") 'bb-ai/send-to-llm-with-context)
 
 ;; Auto-save hook for better Claude Code integration
