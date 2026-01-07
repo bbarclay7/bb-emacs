@@ -139,7 +139,8 @@ This Emacs setup is designed around several core principles:
 | ~C-c C-c~   | Execute code block at point               |
 
 *Images saved to:* ~./images/~ subdirectory (auto-created)
-*Default width:* 600 pixels (customize with ~C-c i w~)
+*Width:* Auto-sized to fit buffer (400px min, 1200px max)
+*Resize:* ~C-c i w~ to manually adjust width
 
 *** AI Workflow - ~C-c a~ prefix
 

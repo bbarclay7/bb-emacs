@@ -72,8 +72,26 @@
         org-download-image-dir "./images"
         org-download-heading-lvl nil  ; Don't organize by heading
         org-download-timestamp "%Y%m%d-%H%M%S_"  ; Timestamp format
-        org-download-screenshot-method "screencapture -i %s"  ; macOS screenshot
-        org-download-image-attr-list '("#+ATTR_ORG: :width 600"))  ; Default width
+        org-download-screenshot-method "screencapture -i %s")  ; macOS screenshot
+
+  ;; Smart image width calculation based on buffer width
+  (defun bb-org/smart-image-width ()
+    "Calculate appropriate image width based on buffer width.
+Returns width in pixels, capping at buffer width minus indentation."
+    (let* ((window-width (window-body-width))  ; Width in characters
+           (char-width 8)  ; Approximate pixels per character (adjust if needed)
+           (indent (save-excursion
+                     (beginning-of-line)
+                     (skip-chars-forward " \t")
+                     (current-column)))
+           (usable-chars (- window-width indent 2))  ; Leave 2 char margin
+           (max-width (* usable-chars char-width)))  ; Convert to pixels
+      (max 400 (min max-width 1200))))  ; Min 400px, max 1200px
+
+  ;; Set image attributes dynamically
+  (setq org-download-image-attr-list
+        '(lambda ()
+           (format "#+ATTR_ORG: :width %d" (bb-org/smart-image-width))))
 
   ;; Keybindings for org-mode
   (with-eval-after-load 'org
