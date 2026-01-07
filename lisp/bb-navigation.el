@@ -74,28 +74,25 @@
         org-download-timestamp "%Y%m%d-%H%M%S_"  ; Timestamp format
         org-download-screenshot-method "screencapture -i %s")  ; macOS screenshot
 
-  ;; Scale factor for image widths - 0.125 for Retina/HiDPI displays
-  (defvar bb-org/image-scale-factor
-    (if (eq system-type 'darwin) 0.125 1.0)
-    "Scale factor for image widths. 0.125 for macOS Retina displays, 1.0 for others.")
-
   ;; Smart image width calculation based on buffer width
+  ;; On Retina displays, just use character count as the width value
   (defun bb-org/smart-image-width ()
     "Calculate appropriate image width based on buffer width.
-Returns width in pixels, capping at buffer width minus indentation.
-Uses actual frame-char-width for accurate HiDPI/Retina display handling."
-    (let* ((window-width (window-body-width))  ; Width in characters
-           (char-width (frame-char-width))      ; Actual pixels per character
+On macOS Retina displays, uses character count directly as width value.
+On other systems, multiplies by character width."
+    (let* ((window-width (window-body-width))
            (indent (save-excursion
                      (beginning-of-line)
                      (skip-chars-forward " \t")
                      (current-column)))
-           (usable-chars (- window-width indent 2))  ; Leave 2 char margin
-           (max-width (* usable-chars char-width bb-org/image-scale-factor))  ; Convert to pixels
-           (final-width (max 100 (min max-width 600))))  ; Min 100px, max 600px
-      (message "Image width calc: win=%d chars=%d indent=%d usable=%d char-width=%d scale=%.2f → %dpx"
-               window-width (window-body-width) indent usable-chars char-width
-               bb-org/image-scale-factor final-width)
+           (usable-chars (- window-width indent 2))
+           (final-width (if (eq system-type 'darwin)
+                            ;; macOS: use character count directly
+                            (max 50 (min usable-chars 400))
+                          ;; Other: multiply by char width
+                          (max 400 (min (* usable-chars (frame-char-width)) 1200)))))
+      (message "Image width calc: win=%d indent=%d usable=%d → %d"
+               window-width indent usable-chars final-width)
       final-width))
 
   ;; Use annotate function to add width attribute dynamically
