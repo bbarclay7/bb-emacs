@@ -74,9 +74,10 @@
         org-download-timestamp "%Y%m%d-%H%M%S_"  ; Timestamp format
         org-download-screenshot-method "screencapture -i %s")  ; macOS screenshot
 
-  ;; Optional: Set to 0.5 on Retina displays if images appear 2x too large
-  (defvar bb-org/image-scale-factor 1.0
-    "Scale factor for image widths. Set to 0.5 for Retina/HiDPI displays if needed.")
+  ;; Scale factor for image widths - 0.5 for Retina/HiDPI displays
+  (defvar bb-org/image-scale-factor
+    (if (eq system-type 'darwin) 0.5 1.0)
+    "Scale factor for image widths. 0.5 for macOS Retina displays, 1.0 for others.")
 
   ;; Smart image width calculation based on buffer width
   (defun bb-org/smart-image-width ()
