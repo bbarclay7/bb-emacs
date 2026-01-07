@@ -75,24 +75,20 @@
         org-download-screenshot-method "screencapture -i %s")  ; macOS screenshot
 
   ;; Smart image width calculation based on buffer width
-  ;; On Retina displays, just use character count as the width value
   (defun bb-org/smart-image-width ()
     "Calculate appropriate image width based on buffer width.
-On macOS Retina displays, uses character count directly as width value.
-On other systems, multiplies by character width."
+Multiplies usable character width by pixels-per-char for proper sizing."
     (let* ((window-width (window-body-width))
            (indent (save-excursion
                      (beginning-of-line)
                      (skip-chars-forward " \t")
                      (current-column)))
            (usable-chars (- window-width indent 2))
-           (final-width (if (eq system-type 'darwin)
-                            ;; macOS: use character count directly
-                            (max 50 (min usable-chars 400))
-                          ;; Other: multiply by char width
-                          (max 400 (min (* usable-chars (frame-char-width)) 1200)))))
-      (message "Image width calc: win=%d indent=%d usable=%d → %d"
-               window-width indent usable-chars final-width)
+           (pixels-per-char (if (eq system-type 'darwin) 6 8))  ; 6 for Retina, 8 for others
+           (calculated-width (* usable-chars pixels-per-char))
+           (final-width (max 300 (min calculated-width 1000))))  ; Min 300px, max 1000px
+      (message "Image width calc: win=%d indent=%d usable=%d × %dpx/char → %dpx"
+               window-width indent usable-chars pixels-per-char final-width)
       final-width))
 
   ;; CRITICAL: Make Org-mode respect #+ATTR_ORG :width attribute
