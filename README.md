@@ -136,7 +136,7 @@ This Emacs setup is designed around several core principles:
 | `C-c c` | Org capture |
 | `C-c l` | Store org link |
 
-#### AI Workflow (Claude Code Integration) - `C-c a` prefix
+#### AI Workflow - `C-c a` prefix
 | Key | Function |
 |-----|----------|
 | `F7` | Send prompt to LLM with automatic context |
@@ -144,73 +144,49 @@ This Emacs setup is designed around several core principles:
 | `C-c a t` | Generate tests for code |
 | `C-c a r` | Refactor code with instructions |
 | `C-c a p` | Send custom prompt with context |
+| `C-c a b` | Switch LLM backend (Ollama/remote) |
 
-## Claude Code Workflow Integration
+**📖 See [AI.md](AI.md) for complete AI workflow guide, Ollama setup, and offline coding.**
 
-The `bb-ai.el` module provides hooks and utilities designed to work seamlessly with Claude Code development workflows.
+## AI-Assisted Development
 
-### Smart Context Gathering
+bb-emacs provides powerful AI assistance for coding, completely offline if desired.
 
-When using AI assistance functions, the system automatically gathers:
-- Current file path and major mode
-- Selected region or function at point
-- Project root and type (via projectile)
-- Cursor position
+### Quick Start
 
-### AI-Assisted Development Functions
+Built-in AI functions (no setup required):
+- `F7` - Send prompt to LLM with automatic context
+- `C-c a e` - Explain code (region or function)
+- `C-c a t` - Generate tests for code
+- `C-c a r` - Refactor code with instructions
+- `C-c a b` - Switch between LLM backends
 
-**Explain Code** (`C-c a e`)
-- Sends current region or function to LLM for explanation
-- Automatically includes file and mode context
-- Useful for understanding unfamiliar code
+**Smart context gathering:** All AI functions automatically include file path, mode, project context, and selected code.
 
-**Generate Tests** (`C-c a t`)
-- Generates comprehensive tests for current function or selection
-- Understands project context and testing frameworks
-- Creates test structure matching your project conventions
+### Offline AI with Ollama
 
-**Refactor Code** (`C-c a r`)
-- Prompts for refactoring instructions
-- Sends code with full context to LLM
-- Preserves functionality while improving code quality
+Run powerful AI models completely offline on your M4 Ultra:
 
-**Smart LLM Prompt** (`F7` or `C-c a p`)
-- Enhanced gptel integration with automatic context
-- Includes file, mode, project, and selection information
-- No need to manually paste code or explain context
-
-### Workflow Hooks
-
-The module provides hooks for custom integration:
-
-```elisp
-;; Pre-command hook (runs before AI operations)
-bb-ai/pre-command-hook
-
-;; Post-command hook (runs after AI operations)
-bb-ai/post-command-hook
-
-;; Example: Auto-save before AI operations
-(add-hook 'bb-ai/pre-command-hook 'bb-ai/auto-save-buffer-maybe)
+```bash
+brew install ollama
+ollama pull qwen2.5-coder:32b
+ollama serve
 ```
 
-### Programming Mode Integration
+Your configuration automatically uses Ollama - **no API costs, complete privacy, works offline.**
 
-AI assistance automatically activates in programming modes:
-- Copilot enabled (if available)
-- Context gathering ready
-- Smart completions active
+### Learn More
 
-### Example Workflow
+**📖 See [AI.md](AI.md) for:**
+- Complete AI workflow guide
+- Ollama setup & model recommendations (7B to 70B)
+- When to use gptel vs. Aider (autonomous editing)
+- Example workflows & hybrid strategies
+- Performance tips for M4 Ultra (128GB RAM)
+- Enabling aidermacs for multi-file editing
+- Complete references
 
-1. Open a Python file in your project
-2. Select a function you want to test
-3. Press `C-c a t` (generate tests)
-4. LLM receives: file path, Python mode, project context, function code
-5. Returns comprehensive test suite
-6. Review and integrate tests
-
-This eliminates manual context switching and copy-pasting when working with AI assistants.
+The AI.md guide covers everything from basic setup to advanced autonomous coding with Aider.
 
 ## Structure
 

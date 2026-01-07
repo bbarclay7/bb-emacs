@@ -143,5 +143,26 @@ Returns an alist with buffer information."
 ;; Auto-save hook for better Claude Code integration
 (add-hook 'bb-ai/pre-command-hook 'bb-ai/auto-save-buffer-maybe)
 
+;;;; Optional: Aider integration for autonomous multi-file editing
+;; Uncomment the section below to enable aidermacs
+;; Requires: pip install aider-chat
+;; Usage: M-x aidermacs-chat for autonomous code editing
+
+;; (use-package aidermacs
+;;   :quelpa (aidermacs :fetcher github :repo "MatthewZMD/aidermacs")
+;;   :config
+;;   ;; Use Ollama for offline agentic coding
+;;   (setq aidermacs-model "ollama/qwen2.5-coder:32b"
+;;         aidermacs-ollama-host "localhost:11434")
+;;   ;; Or use OpenAI-compatible endpoint
+;;   ;; (setq aidermacs-api-base "http://localhost:8080/v1"
+;;   ;;       aidermacs-model "local-model")
+;;   )
+
+;; Keybindings for aider (when enabled)
+;; (global-set-key (kbd "C-c A c") 'aidermacs-chat)  ; Start aider chat
+;; (global-set-key (kbd "C-c A a") 'aidermacs-add-file)  ; Add file to aider
+;; (global-set-key (kbd "C-c A r") 'aidermacs-reset)  ; Reset aider session
+
 (provide 'bb-ai)
 ;;; bb-ai.el ends here
