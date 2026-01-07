@@ -94,9 +94,11 @@ Returns width in pixels, capping at buffer width minus indentation."
            (format "#+ATTR_ORG: :width %d" (bb-org/smart-image-width))))
 
   ;; Keybindings for org-mode - use C-c i prefix (i for image)
-  (with-eval-after-load 'org
-    (define-key org-mode-map (kbd "C-c i p") 'org-download-clipboard)
-    (define-key org-mode-map (kbd "C-c i s") 'org-download-screenshot)))
+  ;; Use org-mode-hook to ensure keybindings work in all org buffers
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (local-set-key (kbd "C-c i p") 'org-download-clipboard)
+              (local-set-key (kbd "C-c i s") 'org-download-screenshot))))
 
 ;; Helper function to resize image at point
 (defun bb-org/resize-image-at-point (width)
