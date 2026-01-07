@@ -31,7 +31,7 @@
   "When copilot should not automatically show completions."
   (or rk/copilot-manual-mode
       (member major-mode rk/no-copilot-modes)
-      (company--active-p)))
+      (and (boundp 'ac-completing) ac-completing)))
 
 (add-to-list 'copilot-disable-predicates #'rk/copilot-disable-predicate)
 

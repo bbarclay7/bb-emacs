@@ -112,7 +112,7 @@
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
  '(org-agenda-files '("/Users/bb/agenda/premiers.org"))
  '(package-selected-packages
-   '(winum p4 openwith org-download org-modern markdown-preview-mode gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x company use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '(winum p4 openwith org-download org-modern markdown-preview-mode gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
@@ -192,10 +192,6 @@
 (tabbar-mode t)
 
 ;;;; autocomplete
-(use-package company
-  :ensure t
-  :defer t)
-
 (use-package auto-complete
   :ensure t
   :defer t
