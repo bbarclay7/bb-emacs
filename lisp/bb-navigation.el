@@ -74,18 +74,23 @@
         org-download-timestamp "%Y%m%d-%H%M%S_"  ; Timestamp format
         org-download-screenshot-method "screencapture -i %s")  ; macOS screenshot
 
+  ;; Optional: Set to 0.5 on Retina displays if images appear 2x too large
+  (defvar bb-org/image-scale-factor 1.0
+    "Scale factor for image widths. Set to 0.5 for Retina/HiDPI displays if needed.")
+
   ;; Smart image width calculation based on buffer width
   (defun bb-org/smart-image-width ()
     "Calculate appropriate image width based on buffer width.
-Returns width in pixels, capping at buffer width minus indentation."
+Returns width in pixels, capping at buffer width minus indentation.
+Uses actual frame-char-width for accurate HiDPI/Retina display handling."
     (let* ((window-width (window-body-width))  ; Width in characters
-           (char-width 8)  ; Approximate pixels per character (adjust if needed)
+           (char-width (frame-char-width))      ; Actual pixels per character
            (indent (save-excursion
                      (beginning-of-line)
                      (skip-chars-forward " \t")
                      (current-column)))
            (usable-chars (- window-width indent 2))  ; Leave 2 char margin
-           (max-width (* usable-chars char-width)))  ; Convert to pixels
+           (max-width (* usable-chars char-width bb-org/image-scale-factor)))  ; Convert to pixels
       (max 400 (min max-width 1200))))  ; Min 400px, max 1200px
 
   ;; Use annotate function to add width attribute dynamically
