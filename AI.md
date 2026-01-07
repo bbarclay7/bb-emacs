@@ -66,15 +66,17 @@ ollama serve
 
 With 128GB RAM, you can run the largest models:
 
-| Model | Size | Best For | Pull Command | RAM | Speed |
-|-------|------|----------|--------------|-----|-------|
-| **qwen2.5-coder:32b** ⭐ | 32B | All-around coding | `ollama pull qwen2.5-coder:32b` | ~20GB | Fast |
-| **deepseek-coder:33b** | 33B | Code generation | `ollama pull deepseek-coder:33b` | ~21GB | Fast |
-| **codellama:34b** | 34B | Python, general | `ollama pull codellama:34b` | ~22GB | Fast |
-| **qwen2.5-coder:7b** | 7B | Rapid iterations | `ollama pull qwen2.5-coder:7b` | ~5GB | Instant |
-| **deepseek-r1:70b** | 70B | Max quality | `ollama pull deepseek-r1:70b` | ~45GB | Slower |
+| Model | Size | Best For | Pull Command | RAM | Speed | Released |
+|-------|------|----------|--------------|-----|-------|----------|
+| **qwen3-coder** ⭐ | 480B MoE (35B active) | Agentic coding, 256k-1M context | `ollama pull qwen3-coder` | ~30GB | Fast | Jul 2025 |
+| **deepseek-r1:70b** 🧠 | 70B | Reasoning + planning | `ollama pull deepseek-r1:70b` | ~45GB | Slower | Jan 2025 |
+| **qwen2.5-coder:32b** | 32B | All-around coding | `ollama pull qwen2.5-coder:32b` | ~20GB | Fast | 2024 |
+| **deepseek-coder:33b** | 33B | Code generation | `ollama pull deepseek-coder:33b` | ~21GB | Fast | 2024 |
+| **codellama:34b** | 34B | Python, general | `ollama pull codellama:34b` | ~22GB | Fast | 2023 |
+| **qwen2.5-coder:7b** | 7B | Rapid iterations | `ollama pull qwen2.5-coder:7b` | ~5GB | Instant | 2024 |
 
-⭐ **Default:** Qwen2.5-Coder 32B (excellent balance)
+⭐ **Default:** Qwen3-Coder (latest agentic model, 69.6% on SWE-bench Verified, near Claude Sonnet 4)
+🧠 **For Planning:** DeepSeek R1 (reasoning model, released Jan 20, 2025)
 
 **Speed comparison:**
 - 7B: ~0.5 seconds per response
@@ -90,6 +92,119 @@ Press `C-c a b` to choose:
 - **localhost-llamacpp** - Local llama.cpp server
 
 All your bb-ai functions (`C-c a e`, `C-c a t`, etc.) work with any backend!
+
+### Context Window Optimization ⚠️ CRITICAL
+
+**Default context window is only 2048 tokens - TOO SMALL for coding!**
+
+Ollama's default context window (2048 tokens) is critically insufficient for code-related tasks. This means the model can only "see" ~1500 lines of code, which severely limits its ability to understand larger functions or files.
+
+#### Recommended Settings
+
+| Model | Recommended Context | Max Context | Memory Cost |
+|-------|---------------------|-------------|-------------|
+| **qwen3-coder** | 32768 (32k) | 1,000,000 (1M) | ~64GB for 256k |
+| **qwen2.5-coder:32b** | 32768 (32k) | 32,768 (32k) | ~8GB |
+| **deepseek-r1:70b** | 32768 (32k) | 64,000 (64k) | ~8GB |
+| **deepseek-coder:33b** | 32768 (32k) | 32,768 (32k) | ~8GB |
+| **codellama:34b** | 16384 (16k) | 16,384 (16k) | ~4GB |
+
+**For M4 Ultra (128GB RAM):** You can easily use 32k-256k context windows!
+
+#### Method 1: Modelfile (RECOMMENDED)
+
+Create a custom model variant with larger context:
+
+```bash
+# Create Modelfile
+cat > Modelfile << 'EOF'
+FROM qwen3-coder
+PARAMETER num_ctx 32768
+EOF
+
+# Build custom model
+ollama create qwen3-coder-32k -f Modelfile
+
+# Use it
+ollama run qwen3-coder-32k
+```
+
+**For maximum context with Qwen3-Coder (256k):**
+```bash
+cat > Modelfile << 'EOF'
+FROM qwen3-coder
+PARAMETER num_ctx 262144
+EOF
+
+ollama create qwen3-coder-256k -f Modelfile
+```
+
+#### Method 2: Environment Variable (Global)
+
+Set for all models system-wide:
+
+```bash
+# Add to ~/.zshrc or ~/.bashrc
+export OLLAMA_CONTEXT_LENGTH=32768
+
+# Restart Ollama
+killall ollama
+ollama serve
+```
+
+#### Method 3: API Parameter (Per Request)
+
+When using gptel, it can pass context size per request (automatically handled by gptel when needed).
+
+For Aider:
+```bash
+aider --model ollama/qwen3-coder \
+      --ollama-url http://localhost:11434 \
+      --context-tokens 32768
+```
+
+**Note:** Aider automatically overrides Ollama's default to 8k minimum for coding.
+
+#### Memory Requirements
+
+Context window size directly impacts VRAM usage:
+
+- **2k context** (default): ~2GB VRAM
+- **8k context** (Aider minimum): ~3GB VRAM
+- **32k context** (recommended): ~10GB VRAM
+- **256k context** (Qwen3-Coder max): ~64GB VRAM
+
+**Rule of thumb:** ~1GB VRAM per 4k tokens of context
+
+#### Verification
+
+Check your current context window:
+
+```bash
+# Run model and check
+ollama show qwen3-coder --modelfile
+
+# Look for:
+# PARAMETER num_ctx 32768
+```
+
+#### Two-Model Workflow Strategy
+
+For optimal performance with large codebases:
+
+1. **Planning Phase** - Use DeepSeek R1 (70B, reasoning)
+   - Analyze architecture
+   - Design implementation strategy
+   - Plan multi-file changes
+   - Context: 32k tokens
+
+2. **Implementation Phase** - Use Qwen3-Coder (agentic)
+   - Execute planned changes
+   - Multi-file edits
+   - Autonomous coding
+   - Context: 32k-256k tokens
+
+This approach combines deep reasoning with efficient execution.
 
 ### Privacy & Offline Benefits
 
@@ -374,51 +489,75 @@ For Emacs-native Aider experience:
 
 ✅ **Run multiple models simultaneously**
 ```bash
-# Terminal 1
-ollama run qwen2.5-coder:32b
+# Terminal 1 - Coding
+ollama run qwen3-coder
 
-# Terminal 2
-ollama run llama3.2:latest
+# Terminal 2 - Reasoning/Planning
+ollama run deepseek-r1:70b
+
+# Terminal 3 - Quick iterations
+ollama run qwen2.5-coder:7b
 ```
 
-Use coding model in Emacs, general model for research/docs.
+Use coding model in Emacs, reasoning model for architecture/planning, fast model for iterations.
 
-✅ **Choose model size by task**
-- **7B**: Active coding, quick iterations, testing ideas
-- **32B**: Production coding, refactoring, most tasks
-- **70B**: Complex architecture, critical decisions, learning
+✅ **Choose model by task**
+- **7B (qwen2.5-coder:7b)**: Quick iterations, testing ideas, learning syntax
+- **32B (qwen2.5-coder:32b)**: Production coding, refactoring, proven workhorse
+- **35B active (qwen3-coder)**: Agentic coding, multi-file changes, complex tasks
+- **70B (deepseek-r1)**: Architecture planning, reasoning, critical decisions
 
 ✅ **Keep models loaded**
 ```bash
 # Pre-load common models at startup
-ollama pull qwen2.5-coder:32b
+ollama pull qwen3-coder
+ollama pull deepseek-r1:70b
 ollama pull qwen2.5-coder:7b
+
+# CRITICAL: Create 32k context versions (see Context Window Optimization section)
+cat > Modelfile << 'EOF'
+FROM qwen3-coder
+PARAMETER num_ctx 32768
+EOF
+ollama create qwen3-coder-32k -f Modelfile
 ```
 
 First query loads model (~10s), subsequent queries are instant.
 
-✅ **Use smaller models for iterative work**
+✅ **Two-model workflow for best results**
 
-When prototyping or learning:
+**Phase 1 - Planning** (Use DeepSeek R1):
+```
+C-c a b → Switch to Ollama-General (DeepSeek R1)
+F7 → "Analyze this architecture and suggest refactoring approach"
+[Deep reasoning, comprehensive planning]
+```
+
+**Phase 2 - Implementation** (Use Qwen3-Coder):
+```
+C-c a b → Switch to Ollama-Coding (Qwen3-Coder)
+Use Aider: aider --model ollama/qwen3-coder-32k
+[Autonomous multi-file editing based on plan]
+```
+
+**Phase 3 - Quick iterations** (Use 7B for speed):
 ```
 C-c a b → Switch to qwen2.5-coder:7b
-[Fast iterations, instant responses]
-
-When ready to implement:
-C-c a b → Switch to qwen2.5-coder:32b
-[Better quality for production code]
+[Fast responses for minor tweaks and testing]
 ```
 
-### Context Window Optimization
+### Working with Large Files
 
 **Large files:**
 - Select specific function instead of whole file
 - Use `C-c a e` on focused regions
+- Ensure you've configured 32k context (see Context Window Optimization section)
 - Aider handles large contexts better than single prompts
 
 **Repository-wide understanding:**
-- Use Aider (has repository map)
-- gptel works best with focused context
+- Use Aider with Qwen3-Coder (has repository map, 256k-1M context)
+- gptel works best with focused context (functions/classes)
+- Consider DeepSeek R1 for architectural analysis
 
 ---
 
@@ -441,10 +580,12 @@ tail -f ~/.ollama/logs/server.log
 ### Model too slow
 
 **Solutions:**
-1. Use smaller model: `C-c a b` → qwen2.5-coder:7b
-2. Close other applications
-3. Check model is loaded: `ollama list`
-4. Use quantized model: `qwen2.5-coder:7b-q4` (4-bit quantization)
+1. Use smaller model: `C-c a b` → qwen2.5-coder:7b (5GB, instant responses)
+2. Check context window isn't too large: `ollama show qwen3-coder --modelfile`
+3. Close other applications to free RAM
+4. Check model is loaded: `ollama list`
+5. Use quantized model if available: `qwen2.5-coder:7b-q4` (4-bit quantization)
+6. For M4 Ultra: You should handle 70B models easily; check RAM usage with `htop`
 
 ### "Backend not responding" in gptel
 
@@ -453,14 +594,22 @@ tail -f ~/.ollama/logs/server.log
 (gptel-make-ollama "Ollama"
   :host "localhost:11434"  ; Default Ollama port
   :stream t
-  :models '(qwen2.5-coder:32b))
+  :models '(qwen3-coder))
+
+;; Check if Ollama is running
+;; Terminal: curl http://localhost:11434/api/tags
 ```
 
 ### Aider can't find Ollama
 
 ```bash
-# Use full model specification
-aider --model ollama/qwen2.5-coder:32b --ollama-url http://localhost:11434
+# Use full model specification with custom context
+aider --model ollama/qwen3-coder \
+      --ollama-url http://localhost:11434 \
+      --context-tokens 32768
+
+# Or use your custom 32k model
+aider --model ollama/qwen3-coder-32k --ollama-url http://localhost:11434
 ```
 
 ---
@@ -492,6 +641,13 @@ aider --model ollama/qwen2.5-coder:32b --ollama-url http://localhost:11434
 - [Best AI Coding Agents 2026](https://www.faros.ai/blog/best-ai-coding-agents-2026)
 - [The Complete Guide to Local AI Coding in 2026](https://dev.to/murat_aslan_fa44b545aaa2c/the-complete-guide-to-local-ai-coding-in-2026-205l)
 
+### Latest Model Releases (2025)
+
+- [Qwen3-Coder: Alibaba's Game-Changing Agentic AI Coding Model](https://medium.com/@cognidownunder/qwen3-coder-alibabas-game-changing-open-source-agentic-ai-coding-model-3cf34dcc8d7a)
+- [Alibaba Unveils Qwen3 Models for Coding](https://www.alizila.com/alibaba-unveils-new-qwen3-models-for-coding-complexing-reasoning-and-machine-translation/)
+- [Alibaba Targets Agentic AI Crown with Qwen3-Coder](https://winbuzzer.com/2025/07/23/alibaba-targets-agentic-ai-crown-with-qwen3-coder-release-xcxwbn/)
+- [How to Set Up and Run Qwen3 Locally With Ollama](https://www.datacamp.com/tutorial/qwen3-ollama)
+
 ### GitHub Copilot Alternatives
 
 - [Tabby - Self-hosted AI Coding Assistant](https://github.com/TabbyML/tabby)
@@ -510,6 +666,9 @@ aider --model ollama/qwen2.5-coder:32b --ollama-url http://localhost:11434
 
 ### Model Information
 
+- **Qwen3-Coder** (Latest): [Qwen3-Coder GitHub](https://github.com/QwenLM/Qwen3-Coder) | [Alibaba Announcement](https://www.alibabacloud.com/blog/alibaba-unveils-cutting-edge-ai-coding-model-qwen3-coder_602399) | [Ollama Library](https://ollama.com/library/qwen3-coder)
+- **Qwen3**: [Qwen3 GitHub](https://github.com/QwenLM/Qwen3) | [Official Blog](https://qwenlm.github.io/blog/qwen3/)
+- **DeepSeek R1** (Reasoning): [DeepSeek R1 Release](https://github.com/deepseek-ai/DeepSeek-R1) | [Ollama Library](https://ollama.com/library/deepseek-r1)
 - **Qwen2.5-Coder**: [Alibaba Cloud Qwen](https://github.com/QwenLM/Qwen2.5-Coder)
 - **DeepSeek-Coder**: [DeepSeek AI](https://github.com/deepseek-ai/DeepSeek-Coder)
 - **CodeLlama**: [Meta AI](https://github.com/facebookresearch/codellama)
@@ -519,12 +678,26 @@ aider --model ollama/qwen2.5-coder:32b --ollama-url http://localhost:11434
 ## Next Steps
 
 1. **Install Ollama** (if not already): `brew install ollama`
-2. **Pull a model**: `ollama pull qwen2.5-coder:32b`
-3. **Try it out**: Open a file, press `C-c a e` to explain code
-4. **Explore**: Use `F7` for free-form questions
-5. **Advanced**: Install aider for autonomous editing
+2. **Pull latest models**:
+   ```bash
+   ollama pull qwen3-coder        # Latest agentic coding model
+   ollama pull deepseek-r1:70b    # Reasoning model
+   ollama pull qwen2.5-coder:7b   # Fast iteration model
+   ```
+3. **⚠️ CRITICAL: Configure 32k context** (see Context Window Optimization section):
+   ```bash
+   cat > Modelfile << 'EOF'
+   FROM qwen3-coder
+   PARAMETER num_ctx 32768
+   EOF
+   ollama create qwen3-coder-32k -f Modelfile
+   ```
+4. **Try it out**: Open a file, press `C-c a e` to explain code
+5. **Explore**: Use `F7` for free-form questions with automatic context
+6. **Switch backends**: Press `C-c a b` to choose between models
+7. **Advanced**: Install aider for autonomous multi-file editing
 
-Your Emacs is now a powerful AI-assisted development environment that works completely offline!
+Your Emacs is now a powerful AI-assisted development environment with state-of-the-art agentic coding capabilities that works completely offline!
 
 ---
 
