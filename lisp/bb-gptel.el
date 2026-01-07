@@ -52,6 +52,11 @@
 ;;
 ;; Memory cost: ~1GB VRAM per 4k context increase
 ;; 256k context = ~64GB VRAM (easily fits M4 Ultra 128GB RAM)
+;;
+;; NOTE: Using OpenAI-compatible API (/v1/chat/completions) for main backend
+;;       - More stable than native Ollama API with gptel
+;;       - Avoids json-read-error and map-elt issues
+;;       - Ollama native API backends kept for reference/fallback
 
 ;; Ollama backend with coding-focused models
 ;; Using extended-context custom modelfiles (see: ollama list)
@@ -77,10 +82,14 @@
 
 ;; Set default backend (choose one):
 ;; For offline coding work with M4 Ultra:
+;; Using OpenAI-compatible API (more stable than native Ollama API)
 (setq gptel-model "qwen3-coder-256k:latest"  ; 256k context - extended context custom model
-      gptel-backend (gptel-make-ollama "Ollama"
+      gptel-backend (gptel-make-openai "Ollama-OpenAI"
                       :host "localhost:11434"
-                      :stream nil  ; Disable streaming to fix "stringp, nil" errors
+                      :protocol "http"
+                      :stream nil
+                      :endpoint "/v1/chat/completions"  ; OpenAI-compatible endpoint
+                      :key "ollama"  ; Dummy key (required but not used)
                       :models '("qwen3-coder-256k:latest"  ; Agentic coding (256k context)
                                 "qwen3-coder-32k:latest"   ; 32k context variant
                                 "qwen2.5-coder:32b"        ; Proven coding workhorse
