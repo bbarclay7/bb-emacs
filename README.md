@@ -54,6 +54,10 @@ This Emacs setup is designed around several core principles:
   - Groups: #flycheck, #misc, #site-emacs, $HOME, project-specific
   - `Shift-Arrow Keys` - Navigate tabs and groups
 
+- **Winum** - Window numbering for quick navigation
+  - Each window shows a number in the mode line
+  - `M-1` through `M-9` to jump to specific windows instantly
+
 - **Custom Frame Management** - Smart frame closing that works for parent/child frames
 - **Change Tracking** - Visual highlighting of document changes
   - `F6` - Toggle change visibility
@@ -94,6 +98,8 @@ This Emacs setup is designed around several core principles:
 |-----|----------|
 | `%` | Jump to matching paren |
 | `M-g` | Go to line |
+| `M-1` to `M-9` | Jump to window 1-9 (winum) |
+| `M-0` | Jump to window 10 or minibuffer |
 | `Shift-Arrows` | Navigate tabbar tabs/groups |
 | `C-=` | Toggle fold current block |
 | `M-=` | Toggle fold all blocks |
@@ -251,6 +257,7 @@ Advanced activation system balancing automatic assistance with manual control:
 - `flycheck` - Syntax checking
 - `auto-complete` - Completion framework with custom dictionaries
 - `tabbar` - Buffer tabs with custom grouping
+- `winum` - Window numbering (M-1 to M-9 for quick window jumping)
 - `rainbow-delimiters` - Paren highlighting
 - `projectile` - Project management and navigation
 - `gptel` - LLM integration

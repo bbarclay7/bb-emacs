@@ -210,6 +210,12 @@
   (projectile-mode +1)
   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
+;;;; winum - window numbering
+(use-package winum
+  :ensure t
+  :config
+  (winum-mode))
+
 ;;;; line numbering
 ;; Using built-in display-line-numbers-mode (Emacs 26+) instead of nlinum
 (global-set-key [f9] 'display-line-numbers-mode)
