@@ -55,35 +55,35 @@
 (gptel-make-ollama "Ollama-Coding"
   :host "localhost:11434"
   :stream t
-  :models '(qwen3-coder             ; ⭐ Latest agentic coding (480B MoE, 35B active, Jul 2025)
-            qwen2.5-coder:32b       ; Excellent all-around coding (32B)
-            deepseek-coder:33b      ; Strong code generation (33B)
-            codellama:34b           ; Python & general coding (34B)
-            qwen2.5-coder:7b))      ; Faster, smaller coding model (7B)
+  :models '("qwen3-coder"           ; ⭐ Latest agentic coding (480B MoE, 35B active, Jul 2025)
+            "qwen2.5-coder:32b"     ; Excellent all-around coding (32B)
+            "deepseek-coder:33b"    ; Strong code generation (33B)
+            "codellama:34b"         ; Python & general coding (34B)
+            "qwen2.5-coder:7b"))    ; Faster, smaller coding model (7B)
 
 ;; Ollama backend with general-purpose models
 (gptel-make-ollama "Ollama-General"
   :host "localhost:11434"
   :stream t
-  :models '(deepseek-r1:70b         ; ⭐ Reasoning + coding (70B, Jan 2025)
-            qwen3:30b-a3b           ; Latest general purpose (30B MoE, 3B active)
-            qwen2.5:32b             ; Previous-gen chat (32B)
-            llama3.2:latest         ; Fast general purpose
-            mistral:latest))        ; Fast and capable
+  :models '("deepseek-r1:70b"       ; ⭐ Reasoning + coding (70B, Jan 2025)
+            "qwen3:30b-a3b"         ; Latest general purpose (30B MoE, 3B active)
+            "qwen2.5:32b"           ; Previous-gen chat (32B)
+            "llama3.2:latest"       ; Fast general purpose
+            "mistral:latest"))      ; Fast and capable
 
 ;; Set default backend (choose one):
 ;; For offline coding work with M4 Ultra:
-(setq gptel-model 'qwen3-coder      ; Latest agentic coding model (Jul 2025)
+(setq gptel-model "qwen3-coder"     ; Latest agentic coding model (Jul 2025)
       gptel-backend (gptel-make-ollama "Ollama"
                       :host "localhost:11434"
                       :stream t
-                      :models '(qwen3-coder           ; Agentic coding (256k-1M context)
-                                qwen2.5-coder:32b     ; Proven coding workhorse
-                                deepseek-r1:70b       ; Reasoning model
-                                deepseek-coder:33b
-                                codellama:34b
-                                qwen2.5-coder:7b
-                                llama3.2:latest)))
+                      :models '("qwen3-coder"         ; Agentic coding (256k-1M context)
+                                "qwen2.5-coder:32b"   ; Proven coding workhorse
+                                "deepseek-r1:70b"     ; Reasoning model
+                                "deepseek-coder:33b"
+                                "codellama:34b"
+                                "qwen2.5-coder:7b"
+                                "llama3.2:latest")))
 
 ;; Helper function to switch between backends
 (defun bb-gptel/switch-backend ()
@@ -98,15 +98,15 @@
        (setq gptel-backend (gptel-make-ollama "Ollama-Coding"
                              :host "localhost:11434"
                              :stream t
-                             :models '(qwen3-coder qwen2.5-coder:32b deepseek-coder:33b codellama:34b))
-             gptel-model 'qwen3-coder)
+                             :models '("qwen3-coder" "qwen2.5-coder:32b" "deepseek-coder:33b" "codellama:34b"))
+             gptel-model "qwen3-coder")
        (message "Switched to Ollama coding models (offline) - Default: Qwen3-Coder"))
       ("Ollama-General"
        (setq gptel-backend (gptel-make-ollama "Ollama-General"
                              :host "localhost:11434"
                              :stream t
-                             :models '(deepseek-r1:70b qwen3:30b-a3b qwen2.5:32b llama3.2:latest mistral:latest))
-             gptel-model 'deepseek-r1:70b)
+                             :models '("deepseek-r1:70b" "qwen3:30b-a3b" "qwen2.5:32b" "llama3.2:latest" "mistral:latest"))
+             gptel-model "deepseek-r1:70b")
        (message "Switched to Ollama general models (offline) - Default: DeepSeek R1"))
       ("alvarez"
        (setq gptel-backend (gptel-make-openai "alvarez"
