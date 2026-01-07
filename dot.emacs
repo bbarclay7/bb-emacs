@@ -112,7 +112,7 @@
  '(gnutls-algorithm-priority "normal:-vers-tls1.3")
  '(org-agenda-files '("/Users/bb/agenda/premiers.org"))
  '(package-selected-packages
-   '(winum p4 openwith org-download org-modern markdown-preview-mode gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
+   '(projectile winum p4 openwith org-download org-modern markdown-preview-mode gptel markdown-mode yaml-mode flycheck-aspell flycheck editorconfig dash s-buffer x use-package tabbar rainbow-delimiters nlinum auto-complete auto-compile)))
 
 (require 'use-package)
 
@@ -201,6 +201,14 @@
   (ac-config-default))
 
 
+
+;;;; projectile - project management
+(use-package projectile
+  :ensure t
+  :defer 1
+  :config
+  (projectile-mode +1)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 
 ;;;; line numbering
 ;; Using built-in display-line-numbers-mode (Emacs 26+) instead of nlinum

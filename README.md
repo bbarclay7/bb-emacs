@@ -78,6 +78,7 @@ This Emacs setup is designed around several core principles:
 
 ### Key Bindings
 
+#### Function Keys
 | Key | Function |
 |-----|----------|
 | `F5` | Revert buffer |
@@ -87,9 +88,47 @@ This Emacs setup is designed around several core principles:
 | `Shift-F8` | Restore killed buffer |
 | `F9` | Toggle line numbers |
 | `F11` | Toggle fullscreen |
+
+#### Navigation & Editing
+| Key | Function |
+|-----|----------|
 | `%` | Jump to matching paren |
 | `M-g` | Go to line |
 | `Shift-Arrows` | Navigate tabbar tabs/groups |
+| `C-=` | Toggle fold current block |
+| `M-=` | Toggle fold all blocks |
+| `M-C-i` | Fold by indentation level |
+| `Alt-PgUp/PgDn` | Navigate between changes |
+
+#### Projectile (Project Management) - `C-c p` prefix
+| Key | Function |
+|-----|----------|
+| `C-c p f` | Find file in project (fuzzy search) |
+| `C-c p p` | Switch to another project |
+| `C-c p s g` | Grep/search in project |
+| `C-c p r` | Find and replace in project |
+| `C-c p k` | Kill all project buffers |
+| `C-c p d` | Find directory in project |
+| `C-c p !` | Run shell command in project root |
+| `C-c p &` | Run async shell command in project root |
+
+#### Copilot
+| Key | Function |
+|-----|----------|
+| `M-C-<escape>` | Cycle copilot mode (auto/manual/off) |
+| `M-C-<return>` | Trigger copilot completion manually |
+| `<tab>` | Accept copilot completion |
+| `M-C-<next>` | Next copilot suggestion |
+| `M-C-<prior>` | Previous copilot suggestion |
+| `M-C-<right>` | Accept completion by word |
+| `M-C-<down>` | Accept completion by line |
+
+#### Org-mode
+| Key | Function |
+|-----|----------|
+| `C-c a` | Open org agenda |
+| `C-c c` | Org capture |
+| `C-c l` | Store org link |
 
 ## Structure
 
@@ -210,9 +249,10 @@ Advanced activation system balancing automatic assistance with manual control:
 
 - `use-package` - Declarative package configuration
 - `flycheck` - Syntax checking
-- `company` - Completion framework
-- `tabbar` - Buffer tabs
+- `auto-complete` - Completion framework with custom dictionaries
+- `tabbar` - Buffer tabs with custom grouping
 - `rainbow-delimiters` - Paren highlighting
+- `projectile` - Project management and navigation
 - `gptel` - LLM integration
 - `org-modern` - Modern org-mode styling
 - `markdown-mode` - Markdown support
