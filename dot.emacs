@@ -125,7 +125,7 @@
 (use-package auto-compile
   :ensure t)
 (auto-compile-on-load-mode)
-(auto-compile-on-save-mode)
+;; Removed auto-compile-on-save-mode for faster editing (no lag on save)
 
 
 ;; https://stackoverflow.com/questions/1587972/how-to-display-indentation-guides-in-emacs/4459159#4459159
