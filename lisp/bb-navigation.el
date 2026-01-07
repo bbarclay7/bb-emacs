@@ -91,7 +91,7 @@ Returns width in pixels, capping at buffer width minus indentation."
   ;; Use annotate function to add width attribute dynamically
   (setq org-download-annotate-function
         (lambda (_link)
-          (format "#+ATTR_ORG: :width %d" (bb-org/smart-image-width))))
+          (format "#+ATTR_ORG: :width %d\n" (bb-org/smart-image-width))))
 
   ;; Clear the old image-attr-list to avoid conflicts
   (setq org-download-image-attr-list nil)
