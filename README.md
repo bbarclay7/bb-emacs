@@ -8,7 +8,7 @@ This Emacs setup is designed around several core principles:
 
 ### Primary Goals
 
-1. **AI-Augmented Development** - Deep integration with GitHub Copilot and LLM tools (gptel) for modern, AI-assisted coding workflows
+1. **AI-Augmented Development** - 100% local, privacy-focused AI with Ollama + Qwen3-Coder for modern, agentic coding workflows
 2. **Python-Centric Polyglot Support** - Optimized for Python development with strong support for multiple languages (Lisp, JavaScript, C/C++, Java, Ruby, PHP, Shell, etc.)
 3. **Visual Comfort** - Custom dark theme (#102e4e), rainbow delimiters, intelligent buffer grouping via tabbar
 4. **Cross-Machine Portability** - Seamless synchronization across Mac and Linux systems
@@ -25,18 +25,16 @@ This Emacs setup is designed around several core principles:
 
 ### AI & Completion
 
-- **GitHub Copilot** - Three-mode system (automatic/manual/off) with intelligent context awareness
-  - `M-C-<escape>` - Cycle through activation modes
-  - `M-C-<return>` - Trigger completions manually
-  - `<tab>` - Accept completion
-  - Automatically disabled in shells, REPLs, and minibuffers
+- **gptel + Ollama** - 100% local LLM integration with state-of-the-art coding models
+  - `F7` - Send to LLM with automatic context gathering
+  - `C-c a e` - Explain code (region or function)
+  - `C-c a t` - Generate tests
+  - `C-c a r` - Refactor code
+  - `C-c a b` - Switch between models (Qwen3-Coder, DeepSeek R1, etc.)
+  - Multiple backends: Ollama (local), remote llama.cpp endpoints
+  - **See [AI.md](AI.md) for complete AI workflow guide**
 
-- **gptel** - LLM integration with llama.cpp endpoints
-  - `F7` - Send to LLM
-  - Two configured endpoints: Tailscale remote (alvarez) and localhost
-  - Crowdsourced prompt library included
-
-- **Company** - Modern text completion framework
+- **Auto-complete** - Fast text completion framework with custom dictionaries
 
 ### Code Quality & Navigation
 
@@ -118,17 +116,6 @@ This Emacs setup is designed around several core principles:
 | `C-c p !` | Run shell command in project root |
 | `C-c p &` | Run async shell command in project root |
 
-#### Copilot
-| Key | Function |
-|-----|----------|
-| `M-C-<escape>` | Cycle copilot mode (auto/manual/off) |
-| `M-C-<return>` | Trigger copilot completion manually |
-| `<tab>` | Accept copilot completion |
-| `M-C-<next>` | Next copilot suggestion |
-| `M-C-<prior>` | Previous copilot suggestion |
-| `M-C-<right>` | Accept completion by word |
-| `M-C-<down>` | Accept completion by line |
-
 #### Org-mode
 | Key | Function |
 |-----|----------|
@@ -202,14 +189,12 @@ bb-emacs/
 │   ├── bb-coding.el      # Coding tools (flycheck, rainbow-delimiters, etc.)
 │   ├── bb-completion.el  # Completion framework (auto-complete)
 │   ├── bb-navigation.el  # Navigation (tabbar, projectile, winum, org)
-│   ├── bb-ai.el          # AI assistance (copilot, gptel, Claude Code hooks)
-│   ├── bb-copilot.el     # Copilot integration & modes
+│   ├── bb-ai.el          # AI assistance (gptel, Claude Code hooks)
 │   ├── bb-gptel.el       # LLM endpoint configuration
 │   ├── tabbar-config.el  # Custom buffer grouping
 │   ├── shebang.el        # Auto chmod for scripts
 │   └── facts.el          # John McCarthy's astronomical calculator
 ├── melpa-packages/        # MELPA package installations
-├── copilot.el/           # GitHub Copilot (git submodule)
 ├── ac-dict/              # Auto-complete dictionaries
 └── fonts/                # Inconsolata font variants
 ```
@@ -223,7 +208,8 @@ The configuration is now organized by function:
 - **bb-coding.el** - Development tools (syntax checking, formatting, code folding)
 - **bb-completion.el** - Text completion framework
 - **bb-navigation.el** - Buffer/window/project navigation tools
-- **bb-ai.el** - AI-assisted development with Claude Code workflow hooks
+- **bb-ai.el** - 100% local AI with gptel + Ollama (Qwen3-Coder, DeepSeek R1)
+- **bb-gptel.el** - LLM backend configuration with context window optimization
 
 This makes it easy to:
 - Test individual components
@@ -245,9 +231,6 @@ This makes it easy to:
 # Clone repository
 git clone <repository-url> ~/.emacs.d
 cd ~/.emacs.d
-
-# Initialize submodules (for copilot.el)
-git submodule update --init --recursive
 
 # Symlink or copy dot.emacs as init.el
 ln -s ~/.emacs.d/dot.emacs ~/.emacs.d/init.el
@@ -342,7 +325,7 @@ Advanced activation system balancing automatic assistance with manual control:
 - `yaml-mode` - YAML support
 - `editorconfig` - Cross-editor consistency
 - `auto-compile` - Automatic Elisp compilation
-- `copilot` - GitHub Copilot (via submodule)
+- `gptel` - LLM integration for AI-assisted development
 
 ## Development
 
@@ -368,5 +351,6 @@ Personal configuration - use and adapt as needed.
 ## Acknowledgments
 
 - John McCarthy for the facts library
-- Robert Krahn for Copilot integration patterns
-- The Emacs and MELPA communities
+- Alibaba Cloud for Qwen3-Coder and the Qwen model family
+- DeepSeek AI for DeepSeek R1 reasoning model
+- The Emacs, MELPA, and Ollama communities

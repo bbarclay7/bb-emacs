@@ -648,14 +648,15 @@ aider --model ollama/qwen3-coder-32k --ollama-url http://localhost:11434
 - [Alibaba Targets Agentic AI Crown with Qwen3-Coder](https://winbuzzer.com/2025/07/23/alibaba-targets-agentic-ai-crown-with-qwen3-coder-release-xcxwbn/)
 - [How to Set Up and Run Qwen3 Locally With Ollama](https://www.datacamp.com/tutorial/qwen3-ollama)
 
-### GitHub Copilot Alternatives
+### Local AI Coding Alternatives
 
 - [Tabby - Self-hosted AI Coding Assistant](https://github.com/TabbyML/tabby)
-- [Best Self-hosted GitHub Copilot Alternatives](https://www.virtualizationhowto.com/2025/05/best-self-hosted-github-copilot-ai-coding-alternatives/)
+- [Continue.dev - Open Source AI Code Assistant](https://continue.dev/)
+- [Best Self-hosted AI Coding Alternatives](https://www.virtualizationhowto.com/2025/05/best-self-hosted-github-copilot-ai-coding-alternatives/)
 - [Replacing GitHub Copilot with Ollama](https://jasongiroux.com/2024/12/11/local-copilot/)
-- [Top 10 Open Source Alternatives to GitHub Copilot](https://www.femaleswitch.com/directories/tpost/6yvgmjs4b1-top-10-open-source-alternatives-to-githu)
-- [Privy - Open Source Copilot Alternative](https://github.com/srikanth235/privy)
-- [FauxPilot - GitHub Copilot Server Alternative](https://github.com/fauxpilot/fauxpilot)
+- [Top 10 Open Source AI Coding Tools](https://www.femaleswitch.com/directories/tpost/6yvgmjs4b1-top-10-open-source-alternatives-to-githu)
+- [Privy - Open Source AI Assistant](https://github.com/srikanth235/privy)
+- [FauxPilot - Self-hosted Coding Assistant](https://github.com/fauxpilot/fauxpilot)
 
 ### Ollama & Local Models
 

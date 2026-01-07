@@ -2,22 +2,12 @@
 ;;; bb-ai.el
 
 ;;; Commentary:
-;; AI-assisted development: Copilot, gptel (LLM), and Claude Code integration hooks
+;; AI-assisted development: gptel (LLM) and Claude Code integration hooks
+;; 100% local AI with Ollama + Qwen3-Coder for privacy and offline capability
 
 ;;; Code:
 
 (require 'gptel nil t)
-
-;;;; Copilot configuration
-(when (not (getenv "EC_SITE"))
-  (let ((copilot-path (expand-file-name "copilot.el" user-emacs-directory)))
-    (if (file-exists-p (concat copilot-path "/copilot.el"))
-        (progn
-          (use-package copilot
-            :load-path copilot-path
-            :diminish)
-          (load "bb-copilot.el"))
-      (warn "copilot.el not found at %s - run 'git submodule update --init --recursive'" copilot-path))))
 
 ;;;; gptel - LLM integration
 (use-package gptel
@@ -81,10 +71,7 @@ Returns an alist with buffer information."
 ;; Hook for when entering programming modes
 (defun bb-ai/prog-mode-setup ()
   "Setup AI assistance for programming modes."
-  (run-hooks 'bb-ai/pre-command-hook)
-  ;; Enable copilot if available
-  (when (fboundp 'copilot-mode)
-    (copilot-mode 1)))
+  (run-hooks 'bb-ai/pre-command-hook))
 
 (add-hook 'prog-mode-hook 'bb-ai/prog-mode-setup)
 
