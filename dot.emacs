@@ -26,7 +26,12 @@
 ;; platform customization
 (when (eq system-type 'darwin)
   (setq mac-option-modifier 'super)
-  (setq mac-command-modifier 'meta))
+  (setq mac-command-modifier 'meta)
+  ;; Raise Emacs frame to front on startup
+  (add-hook 'after-init-hook
+            (lambda ()
+              (raise-frame)
+              (select-frame-set-input-focus (selected-frame)))))
 
 ;; MELPA setup
 ;; ref - https://melpa.org/partials/getting-started.html
