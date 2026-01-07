@@ -74,10 +74,10 @@
         org-download-timestamp "%Y%m%d-%H%M%S_"  ; Timestamp format
         org-download-screenshot-method "screencapture -i %s")  ; macOS screenshot
 
-  ;; Scale factor for image widths - 0.5 for Retina/HiDPI displays
+  ;; Scale factor for image widths - 0.25 for Retina/HiDPI displays
   (defvar bb-org/image-scale-factor
-    (if (eq system-type 'darwin) 0.5 1.0)
-    "Scale factor for image widths. 0.5 for macOS Retina displays, 1.0 for others.")
+    (if (eq system-type 'darwin) 0.25 1.0)
+    "Scale factor for image widths. 0.25 for macOS Retina displays, 1.0 for others.")
 
   ;; Smart image width calculation based on buffer width
   (defun bb-org/smart-image-width ()
@@ -91,8 +91,12 @@ Uses actual frame-char-width for accurate HiDPI/Retina display handling."
                      (skip-chars-forward " \t")
                      (current-column)))
            (usable-chars (- window-width indent 2))  ; Leave 2 char margin
-           (max-width (* usable-chars char-width bb-org/image-scale-factor)))  ; Convert to pixels
-      (max 400 (min max-width 1200))))  ; Min 400px, max 1200px
+           (max-width (* usable-chars char-width bb-org/image-scale-factor))  ; Convert to pixels
+           (final-width (max 200 (min max-width 800))))  ; Min 200px, max 800px
+      (message "Image width calc: win=%d chars=%d indent=%d usable=%d char-width=%d scale=%.2f → %dpx"
+               window-width (window-body-width) indent usable-chars char-width
+               bb-org/image-scale-factor final-width)
+      final-width))
 
   ;; Use annotate function to add width attribute dynamically
   (setq org-download-annotate-function
