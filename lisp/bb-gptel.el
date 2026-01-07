@@ -57,7 +57,7 @@
 ;; Using extended-context custom modelfiles (see: ollama list)
 (gptel-make-ollama "Ollama-Coding"
   :host "localhost:11434"
-  :stream t
+  :stream nil  ; Disable streaming (workaround for "stringp, nil" errors)
   :models '("qwen3-coder-256k:latest"  ; ⭐ 256k context (480B MoE, 35B active, Jul 2025)
             "qwen3-coder-32k:latest"   ; 32k context variant
             "qwen2.5-coder:32b"        ; Excellent all-around coding (32B)
@@ -68,7 +68,7 @@
 ;; Ollama backend with general-purpose models
 (gptel-make-ollama "Ollama-General"
   :host "localhost:11434"
-  :stream t
+  :stream nil  ; Disable streaming (workaround for "stringp, nil" errors)
   :models '("deepseek-r1:70b"       ; ⭐ Reasoning + coding (70B, Jan 2025)
             "qwen3:30b-a3b"         ; Latest general purpose (30B MoE, 3B active)
             "qwen2.5:32b"           ; Previous-gen chat (32B)
@@ -80,7 +80,7 @@
 (setq gptel-model "qwen3-coder-256k:latest"  ; 256k context - extended context custom model
       gptel-backend (gptel-make-ollama "Ollama"
                       :host "localhost:11434"
-                      :stream t
+                      :stream nil  ; Disable streaming to fix "stringp, nil" errors
                       :models '("qwen3-coder-256k:latest"  ; Agentic coding (256k context)
                                 "qwen3-coder-32k:latest"   ; 32k context variant
                                 "qwen2.5-coder:32b"        ; Proven coding workhorse
@@ -102,14 +102,14 @@
       ("Ollama-Coding"
        (setq gptel-backend (gptel-make-ollama "Ollama-Coding"
                              :host "localhost:11434"
-                             :stream t
+                             :stream nil
                              :models '("qwen3-coder-256k:latest" "qwen3-coder-32k:latest" "qwen2.5-coder:32b" "deepseek-coder:33b" "codellama:34b"))
              gptel-model "qwen3-coder-256k:latest")
        (message "Switched to Ollama coding models (offline) - Default: Qwen3-Coder-256k"))
       ("Ollama-General"
        (setq gptel-backend (gptel-make-ollama "Ollama-General"
                              :host "localhost:11434"
-                             :stream t
+                             :stream nil
                              :models '("deepseek-r1:70b" "qwen3:30b-a3b" "qwen2.5:32b" "llama3.2:latest" "mistral:latest"))
              gptel-model "deepseek-r1:70b")
        (message "Switched to Ollama general models (offline) - Default: DeepSeek R1"))
