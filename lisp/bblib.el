@@ -86,7 +86,7 @@ To undo latest kill call 'my-unkill-buffer'"
     ;; in case compilation fails, don't leave the old .elc around:
     (when (or
 	   (not (file-exists-p cache-file))
-	   (file-newer-than-file-p))
+	   (file-newer-than-file-p el-file cache-file))
       
       (when (file-exists-p cache-file)
         (delete-file (concat user-init-file ".elc")))

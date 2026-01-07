@@ -23,13 +23,10 @@
 
 (load "bblib.el")
 
-;;(mapc #'byte-compile-el-file-lazy
-;;      (cons (file-truename user-init-file)
-;;       (directory-files bb-emacslib-root t "\\.el$")))
-
 ;; platform customization
-(setq mac-option-modifier 'super)
-(setq mac-command-modifier 'meta)
+(when (eq system-type 'darwin)
+  (setq mac-option-modifier 'super)
+  (setq mac-command-modifier 'meta))
 
 
 ;; mepla setup
@@ -122,6 +119,7 @@
 ;; flycheck mode -- https://www.flycheck.org/en/latest/user/installation.html#package-installation
 (use-package flycheck
   :ensure t
+  :defer 2
   :init (global-flycheck-mode))
 
 (use-package auto-compile
@@ -141,22 +139,6 @@
       (set-selective-display
        (if selective-display nil (or col 1))))))
 (global-set-key [(M C i)] 'aj-toggle-fold)
-;(require 'highlight-indentation)
-;(add-hook 'python-mode-hook 'highlight-indentation-mode)
-;(add-hook 'js2-mode-hook 'highlight-indentation-mode)
-
-;; (let ((font "Arial")
-;;       (background "#CCC")
-;;       (height 44))
-;;    ;(elpy-enable)
-;;    (set-face-background 'highlight-indentation-face background)
-;;    (set-face-attribute 'highlight-indentation-face nil :height height)
-;;    ;(set-face-attribute 'linum nil :height 1)
-;;    ;(set-face-attribute 'linum nil :font font)
-;;    )
-
-
-
 
 (use-package rainbow-delimiters
   :ensure t
@@ -183,34 +165,16 @@
 
 
 
-
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "#102e4e" :foreground "#eeeeee" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 154 :width normal :foundry "unknown" :family "DejaVu Sans Mono"))))
- '(quack-pltish-defn-face ((t (:foreground "dark orange" :weight bold))))
- '(rainbow-delimiters-depth-1-face ((t (:foreground "red"))))
- '(rainbow-delimiters-depth-2-face ((t (:foreground "yellow"))))
- '(rainbow-delimiters-depth-3-face ((t (:foreground "lawn green"))))
- '(rainbow-delimiters-depth-4-face ((t (:foreground "cyan"))))
- '(rainbow-delimiters-depth-5-face ((t (:foreground "magenta"))))
- '(rainbow-delimiters-depth-6-face ((t (:foreground "tomato"))))
- '(rainbow-delimiters-depth-7-face ((t (:foreground "tan"))))
- '(rainbow-delimiters-depth-8-face ((t (:foreground "cornsilk"))))
- '(rainbow-delimiters-depth-9-face ((t (:foreground "medium sea green")))))
-
-
 ;;;; copilot
 (when (not (getenv "EC_SITE"))
-  (use-package copilot
-    :load-path (lambda () (expand-file-name "copilot.el" user-emacs-directory))
-    ;; don't show in mode line
-    :diminish)
-  
-  (load "bb-copilot.el"))
+  (let ((copilot-path (expand-file-name "copilot.el" user-emacs-directory)))
+    (if (file-exists-p (concat copilot-path "/copilot.el"))
+        (progn
+          (use-package copilot
+            :load-path copilot-path
+            :diminish)
+          (load "bb-copilot.el"))
+      (warn "copilot.el not found at %s - run 'git submodule update --init --recursive'" copilot-path))))
 
 
 
@@ -229,30 +193,22 @@
 
 ;;;; autocomplete
 (use-package company
-  :ensure t)
-
-;; (add-hook 'company-mode-hook
-;; 	  '(lambda ()
-;;              (add-to-list 'company-backends 'company-dabbrev-code)
-;;              ))
-
-
-
-;; (add-hook 'after-init-hook 'global-company-mode)
-
+  :ensure t
+  :defer t)
 
 (use-package auto-complete
   :ensure t
-)
-(add-to-list 'ac-dictionary-directories (concat bb-emacslib-root "/ac-dict"))
-(require 'auto-complete-config)
-(ac-config-default)
+  :defer t
+  :config
+  (add-to-list 'ac-dictionary-directories (concat bb-emacslib-root "/ac-dict"))
+  (require 'auto-complete-config)
+  (ac-config-default))
 
 
 
 ;;;; line numbering
-(use-package nlinum  :ensure t )
-(global-set-key [f9] 'nlinum-mode)
+;; Using built-in display-line-numbers-mode (Emacs 26+) instead of nlinum
+(global-set-key [f9] 'display-line-numbers-mode)
 
 
 ;;;; misc. shortcuts
@@ -378,16 +334,12 @@
 
 (global-set-key (kbd "M-s C-s") 'isearch-forward-symbol-at-point)
 
-
-;;(defun bb-tabbar-bindings ()
+;; Tabbar navigation with shift-arrow keys
 (setq org-support-shift-select 'always)
 (global-set-key [S-left] 'tabbar-backward)
 (global-set-key [S-right] 'tabbar-forward)
 (global-set-key [S-up] 'tabbar-backward-group)
 (global-set-key [S-down] 'tabbar-forward-group)
-;;(global-set-key [backtab] 'tabbar-mode)
-					;  )
-;;
 
 (fido-mode) ; esc-tab completes in minibuffer without exiting minibuffer
 
@@ -402,20 +354,11 @@
 (load "facts.el")
 
 
-;; gptel
-(global-set-key [f7] 'gptel-send)
-
-;; Llama.cpp offers an OpenAI compatible API
-(gptel-make-openai "llama-cpp"          ;Any name
-  :stream t                             ;Stream responses
-  :protocol "http"
-  :host "100.72.223.11:8080"                ; alvarez on tailscale
-  :models '("alvarez-llamafile"))                    ;Any names, doesn't matter for Llama
-(gptel-make-openai "llama-cpp2"          ;Any name
-  :stream t                             ;Stream responses
-  :protocol "http"
-  :host "127.0.0.1:8080"                ; localhost
-  :models '("localhost-llamafile"))              ;Any names, doesn't matter
+;; gptel - LLM integration
+(use-package gptel
+  :ensure t
+  :defer t
+  :config (load "bb-gptel.el"))
 
 
 
