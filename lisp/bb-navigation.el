@@ -39,8 +39,9 @@
 (setq org-agenda-include-diary t)
 
 ;; Org-mode keybindings
+;; Note: C-c a is reserved as prefix for AI commands
 (global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c a") #'org-agenda)
+(global-set-key (kbd "C-c o a") #'org-agenda)  ; Changed from C-c a to avoid AI prefix conflict
 (global-set-key (kbd "C-c c") #'org-capture)
 
 ;;;; Org-modern styling

@@ -123,11 +123,11 @@ This Emacs setup is designed around several core principles:
 
 *** Org-mode
 
-| Key       | Function        |
-|-----------+-----------------|
-| ~C-c a~   | Open org agenda |
-| ~C-c c~   | Org capture     |
-| ~C-c l~   | Store org link  |
+| Key         | Function        |
+|-------------+-----------------|
+| ~C-c o a~   | Open org agenda |
+| ~C-c c~     | Org capture     |
+| ~C-c l~     | Store org link  |
 
 *** Org-mode Images (in org files)
 
