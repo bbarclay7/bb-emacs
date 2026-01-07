@@ -52,28 +52,42 @@ CONTEXT should be a string of additional context (like selected code)."
          (when (string= event "finished\n")
            (with-current-buffer (process-buffer process)
              (goto-char (point-min))
-             (let* ((json-object-type 'alist)
+             (let* ((raw-response (buffer-substring-no-properties (point-min) (point-max)))
+                    (json-object-type 'alist)
                     (json-array-type 'list)
-                    (json-key-type 'keyword)
-                    (response (ignore-errors (json-read)))
-                    (content (when response
-                              (cdr (assoc :content
-                                         (cdr (assoc :message
-                                                    (elt (cdr (assoc :choices response)) 0))))))))
-               (erase-buffer)
-               (if content
-                   (progn
-                     (insert "# Ollama Response\n")
-                     (insert (format "Model: %s\n\n" bb-ollama-model))
-                     (insert content)
-                     (goto-char (point-min))
-                     (markdown-mode)
-                     (pop-to-buffer (current-buffer))
-                     (message "Ollama response ready!"))
-                 (insert "Error: Could not parse response\n")
-                 (goto-char (point-min))
-                 (pop-to-buffer (current-buffer))
-                 (message "Error querying Ollama")))))))))) ; Close if, let*, with-current-buffer, when, lambda, set-process-sentinel, let for proc, let* for bindings, defun
+                    (json-key-type 'keyword))
+               (goto-char (point-min))
+               (let* ((response (condition-case err
+                                   (json-read)
+                                 (error (progn
+                                         (message "JSON parse error: %S" err)
+                                         nil))))
+                      (choices (when response (cdr (assoc :choices response))))
+                      (first-choice (when choices (elt choices 0)))
+                      (message-obj (when first-choice (cdr (assoc :message first-choice))))
+                      (content (when message-obj (cdr (assoc :content message-obj)))))
+                 (erase-buffer)
+                 (if content
+                     (progn
+                       (insert "# Ollama Response\n")
+                       (insert (format "Model: %s\n\n" bb-ollama-model))
+                       (insert content)
+                       (goto-char (point-min))
+                       (when (fboundp 'markdown-mode)
+                         (markdown-mode))
+                       (pop-to-buffer (current-buffer))
+                       (message "Ollama response ready!"))
+                   (insert "Error: Could not parse response\n\n")
+                   (insert "Debug info:\n")
+                   (insert (format "Response object exists: %s\n" (if response "yes" "no")))
+                   (insert (format "Choices exists: %s\n" (if choices "yes" "no")))
+                   (insert (format "First choice exists: %s\n" (if first-choice "yes" "no")))
+                   (insert (format "Message object exists: %s\n" (if message-obj "yes" "no")))
+                   (insert "\nRaw response:\n")
+                   (insert raw-response)
+                   (goto-char (point-min))
+                   (pop-to-buffer (current-buffer))
+                   (message "Error querying Ollama - check *Ollama Response* buffer for details")))))))))) ; Close if, let*, with-current-buffer, when, lambda, set-process-sentinel, let for proc, let* for bindings, defun
 
 (defun bb-ollama-explain-code ()
   "Explain the selected code using Ollama."
