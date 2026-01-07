@@ -136,11 +136,13 @@ This Emacs setup is designed around several core principles:
 | ~C-c i p~   | Paste screenshot from clipboard           |
 | ~C-c i s~   | Take new screenshot and insert            |
 | ~C-c i w~   | Resize image at point (prompts for width) |
+| ~C-c i t~   | Toggle inline images visibility           |
 | ~C-c C-c~   | Execute code block at point               |
 
 *Images saved to:* ~./images/~ subdirectory (auto-created)
-*Width:* Auto-sized to fit buffer (400px min, 1200px max)
-*Resize:* ~C-c i w~ to manually adjust width
+*Width:* Auto-sized to fit buffer (300px min, 1000px max)
+*Display:* Images show automatically when opening org files
+*Toggle:* ~C-c i t~ to hide/show all images in buffer
 
 *** AI Workflow - ~C-c a~ prefix
 

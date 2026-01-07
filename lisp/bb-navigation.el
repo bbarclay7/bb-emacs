@@ -42,6 +42,9 @@
 ;; nil = always use #+ATTR width, don't use actual image dimensions
 (setq org-image-actual-width nil)
 
+;; Auto-display inline images when opening org files
+(setq org-startup-with-inline-images t)
+
 ;; Org-mode keybindings
 ;; Note: C-c a is reserved as prefix for AI commands
 (global-set-key (kbd "C-c l") #'org-store-link)
@@ -117,7 +120,8 @@ Multiplies usable character width by pixels-per-char for proper sizing."
   (add-hook 'org-mode-hook
             (lambda ()
               (local-set-key (kbd "C-c i p") 'org-download-clipboard)
-              (local-set-key (kbd "C-c i s") 'org-download-screenshot))))
+              (local-set-key (kbd "C-c i s") 'org-download-screenshot)
+              (local-set-key (kbd "C-c i t") 'org-toggle-inline-images))))
 
 ;; Helper function to resize image at point
 (defun bb-org/resize-image-at-point (width)
