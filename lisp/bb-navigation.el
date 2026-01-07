@@ -45,6 +45,11 @@
 ;; Auto-display inline images when opening org files
 (setq org-startup-with-inline-images t)
 
+;; Fix scrolling past tall images - prevent cursor from snapping back
+(setq scroll-conservatively 101)  ; Never recenter when scrolling
+(setq scroll-margin 0)             ; No scroll margin
+(setq scroll-preserve-screen-position t)  ; Keep cursor position when scrolling
+
 ;; Org-mode keybindings
 ;; Note: C-c a is reserved as prefix for AI commands
 (global-set-key (kbd "C-c l") #'org-store-link)
