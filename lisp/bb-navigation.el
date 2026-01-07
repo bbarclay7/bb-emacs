@@ -75,8 +75,17 @@
   :after org
   :config
   ;; Save images in ./images/ subdirectory relative to org file
+  ;; Create images directory in same folder as the org file
+  (defun bb-org/download-image-dir ()
+    "Return path to images directory, creating it if needed."
+    (let* ((org-file-dir (file-name-directory (buffer-file-name)))
+           (images-dir (expand-file-name "images" org-file-dir)))
+      (unless (file-exists-p images-dir)
+        (make-directory images-dir t))
+      images-dir))
+
   (setq org-download-method 'directory
-        org-download-image-dir "./images"
+        org-download-image-dir 'bb-org/download-image-dir  ; Use function to ensure dir exists
         org-download-heading-lvl nil  ; Don't organize by heading
         org-download-timestamp "%Y%m%d-%H%M%S_"  ; Timestamp format
         org-download-screenshot-method "screencapture -i %s")  ; macOS screenshot
