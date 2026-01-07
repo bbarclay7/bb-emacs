@@ -73,7 +73,7 @@ CONTEXT should be a string of additional context (like selected code)."
                  (insert "Error: Could not parse response\n")
                  (goto-char (point-min))
                  (pop-to-buffer (current-buffer))
-                 (message "Error querying Ollama")))))))))
+                 (message "Error querying Ollama")))))))))) ; Close if, let*, with-current-buffer, when, lambda, set-process-sentinel, let for proc, let* for bindings, defun
 
 (defun bb-ollama-explain-code ()
   "Explain the selected code using Ollama."
