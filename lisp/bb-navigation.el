@@ -49,5 +49,17 @@
   :hook (org-mode . org-modern-mode)
   :defer t)
 
+;;;; Org-babel - execute code blocks in org files
+;; Enable execution of bash/shell, elisp, and python code blocks
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (shell . t)      ; bash, sh - for executing shell commands
+   (python . t)))   ; python code blocks
+
+;; Don't ask for confirmation before executing code blocks
+;; (Security: only enable this for trusted org files)
+(setq org-confirm-babel-evaluate nil)
+
 (provide 'bb-navigation)
 ;;; bb-navigation.el ends here

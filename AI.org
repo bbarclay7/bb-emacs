@@ -123,9 +123,11 @@ EOF
 # Build custom model
 ollama create qwen3-coder-32k -f Modelfile
 
-# Use it
-ollama run qwen3-coder-32k
+# Verify it was created
+ollama list | grep qwen3-coder-32k
 #+end_src
+
+To use it interactively in a terminal: ~ollama run qwen3-coder-32k~
 
 *For maximum context with Qwen3-Coder (256k):*
 #+begin_src bash
@@ -477,19 +479,21 @@ For Emacs-native Aider experience:
 
 ** For M4 Ultra (128GB RAM)
 
-✅ *Run multiple models simultaneously*
+✅ *Check available models*
 #+begin_src bash
-# Terminal 1 - Coding
-ollama run qwen3-coder
+# List all installed models
+ollama list
 
-# Terminal 2 - Reasoning/Planning
-ollama run deepseek-r1:70b
-
-# Terminal 3 - Quick iterations
-ollama run qwen2.5-coder:7b
+# Check specific model details
+ollama show qwen3-coder --modelfile
 #+end_src
 
-Use coding model in Emacs, reasoning model for architecture/planning, fast model for iterations.
+To run models interactively in separate terminals:
+- Terminal 1: ~ollama run qwen3-coder~ (coding)
+- Terminal 2: ~ollama run deepseek-r1:70b~ (reasoning/planning)
+- Terminal 3: ~ollama run qwen2.5-coder:7b~ (quick iterations)
+
+Use coding model in Emacs via gptel, reasoning model for architecture/planning, fast model for iterations.
 
 ✅ *Choose model by task*
 - *7B (qwen2.5-coder:7b)*: Quick iterations, testing ideas, learning syntax
